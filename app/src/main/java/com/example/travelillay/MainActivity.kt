@@ -2,6 +2,7 @@ package com.example.travelillay
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.travelillay.databinding.MainActivityBinding
@@ -15,6 +16,7 @@ import retrofit2.Response
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: MainActivityBinding
+    private var isPasswordVisible = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,24 +51,48 @@ class MainActivity : AppCompatActivity() {
             val request = LoginRequest(correo, contrasena)
             loginUser(request)
         }
+
+        // Manejar el clic en el icono del ojo para mostrar/ocultar la contraseña
+        binding.imageViewTogglePassword.setOnClickListener {
+            togglePasswordVisibility()
+        }
+    }
+
+    private fun togglePasswordVisibility() {
+        if (isPasswordVisible) {
+            binding.editTextPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            binding.imageViewTogglePassword.setImageResource(R.drawable.ic_eye_closed)
+        } else {
+            binding.editTextPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+            binding.imageViewTogglePassword.setImageResource(R.drawable.ic_eye_open)
+        }
+        isPasswordVisible = !isPasswordVisible
+        // Mueve el cursor al final del texto
+        binding.editTextPassword.setSelection(binding.editTextPassword.text.length)
     }
 
     private fun loginUser(request: LoginRequest) {
-        RetrofitClient.instance.loginUser(request).enqueue(object : Callback<LoginResponse> {
+        RetrofitClient.apiService.loginUser(request).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(this@MainActivity, "Inicio de sesión aceptado", Toast.LENGTH_SHORT).show()
+                    val loginResponse = response.body()
+                    if (loginResponse != null) {
+                        Toast.makeText(this@MainActivity, "Inicio de sesión aceptado", Toast.LENGTH_SHORT).show()
 
-                    // Guardar estado de sesión
-                    val sharedPreferences = getSharedPreferences("TravelIllayPrefs", MODE_PRIVATE)
-                    val editor = sharedPreferences.edit()
-                    editor.putBoolean("isLoggedIn", true)
-                    editor.apply()
+                        // Guardar estado de sesión y el ID del usuario
+                        val sharedPreferences = getSharedPreferences("TravelIllayPrefs", MODE_PRIVATE)
+                        val editor = sharedPreferences.edit()
+                        editor.putBoolean("isLoggedIn", true)
+                        editor.putInt("userId", loginResponse.id) // Guardar el ID del usuario
+                        editor.apply()
 
-                    // Redirigir a PrincipalActivity
-                    val intent = Intent(this@MainActivity, PrincipalActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                        // Redirigir a PrincipalActivity
+                        val intent = Intent(this@MainActivity, PrincipalActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(this@MainActivity, "Error al procesar la respuesta", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
                     Toast.makeText(this@MainActivity, "Credenciales inválidas", Toast.LENGTH_SHORT).show()
                 }

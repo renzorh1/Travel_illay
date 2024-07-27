@@ -1,6 +1,7 @@
 package com.example.travelillay.network
 
 data class LoginResponse(
-    val message: String,
-    val user: User?
+    val id: Int,
+    val token: String,
+    val message: String
 )

@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:text="Bienvenidos a travel Illay"
+            android:text="Bienvenidos a Travel Illay"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -44,13 +44,28 @@
             android:hint="Correo Electrónico"
             android:inputType="textEmailAddress" />
 
-        <EditText
-            android:id="@+id/editTextPassword"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Contraseña"
-            android:inputType="textPassword" />
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editTextPassword"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:hint="Contraseña"
+                android:inputType="textPassword" />
+
+            <ImageView
+                android:id="@+id/imageViewTogglePassword"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:padding="12dp"
+                android:src="@drawable/ic_eye_closed"
+                android:contentDescription="Toggle Password Visibility" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -89,8 +104,6 @@
                 android:text="Registrarse"
                 android:textStyle="bold" />
         </LinearLayout>
-
-
 
     </LinearLayout>
 </ScrollView>

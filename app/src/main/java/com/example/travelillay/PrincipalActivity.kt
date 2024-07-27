@@ -36,6 +36,8 @@ class PrincipalActivity : AppCompatActivity() {
         // Set up click listeners for menu items
         popupView.findViewById<View>(R.id.menuPerfil).setOnClickListener {
             // Handle Perfil click
+            val intent = Intent(this, PerfilActivity::class.java)
+            startActivity(intent)
             popupWindow.dismiss()
         }
 

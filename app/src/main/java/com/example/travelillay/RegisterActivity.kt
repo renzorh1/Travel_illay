@@ -62,7 +62,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun registerUser(request: RegisterRequest) {
-        RetrofitClient.instance.registerUser(request).enqueue(object : Callback<RegisterResponse> {
+        RetrofitClient.apiService.registerUser(request).enqueue(object : Callback<RegisterResponse> {
             override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
                 if (response.isSuccessful) {
                     Toast.makeText(this@RegisterActivity, "Registro exitoso", Toast.LENGTH_SHORT).show()
