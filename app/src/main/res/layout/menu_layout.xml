@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Travel Illay"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/menuPerfil"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_profile"
+        android:drawablePadding="8dp"
+        android:padding="8dp"
+        android:text="Perfil" />
+
+    <TextView
+        android:id="@+id/menuHistorial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Historial"
+        android:drawableStart="@drawable/ic_history"
+        android:drawablePadding="8dp"
+        android:padding="8dp"/>
+
+    <TextView
+        android:id="@+id/menuConfiguracion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Configuración"
+        android:drawableStart="@drawable/ic_settings"
+        android:drawablePadding="8dp"
+        android:padding="8dp"/>
+
+    <TextView
+        android:id="@+id/menuCerrarSesion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cerrar sesión"
+        android:drawableStart="@drawable/ic_logout"
+        android:drawablePadding="8dp"
+        android:padding="8dp"/>
+</LinearLayout>

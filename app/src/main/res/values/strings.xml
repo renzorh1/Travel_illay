@@ -1,3 +1,38 @@
 <resources>
     <string name="app_name">Travel Illay</string>
+    <!-- Otros textos -->
+
+    <string name="terms_conditions">Términos y Condiciones de Uso de Travel Illay\n\n
+    1. Aceptación de los Términos\n\n
+    Al crear una cuenta en Travel Illay o al utilizar nuestros servicios, aceptas estos Términos y Condiciones en su totalidad. Estos términos constituyen un acuerdo legalmente vinculante entre tú y [Nombre de tu empresa]. Si no estás de acuerdo con alguna de estas disposiciones, te pedimos que no utilices nuestra aplicación.\n\n
+    2. Descripción del Servicio\n\n
+    Travel Illay es una plataforma que permite a los usuarios crear, gestionar y compartir itinerarios de viaje de forma manual o automática. Nuestros servicios incluyen, entre otros:\n\n
+    Creación de cuentas de usuario: Los usuarios pueden registrarse para crear una cuenta personal y acceder a las funcionalidades de la aplicación.\n
+    Creación de itinerarios: Los usuarios pueden diseñar itinerarios personalizados, seleccionando destinos, actividades, alojamiento y transporte.\n
+    Generación automática de itinerarios: La aplicación puede sugerir itinerarios basados en las preferencias del usuario.\n
+    Compartir itinerarios: Los usuarios pueden compartir sus itinerarios con otros usuarios o a través de redes sociales.\n\n
+    3. Uso del Servicio\n\n
+    Registro: Para utilizar Travel Illay, debes registrarte y proporcionar información precisa y actualizada.\n
+    Responsabilidad del usuario: Eres responsable de mantener la confidencialidad de tu contraseña y de todas las actividades que se realicen bajo tu cuenta.\n
+    Uso prohibido: No puedes utilizar Travel Illay para fines ilegales, dañinos o que infrinjan los derechos de terceros.\n
+    Contenido del usuario: Eres el único responsable del contenido que subas o compartas en Travel Illay. Te comprometes a no publicar contenido que sea difamatorio, obsceno, amenazante, o que infrinja derechos de autor o marcas registradas.\n\n
+    4. Propiedad Intelectual\n\n
+    Derechos de autor: Todos los contenidos de Travel Illay, incluyendo el software, el diseño, los textos, las imágenes y las marcas comerciales, son propiedad de [Nombre de tu empresa] o de sus licenciantes.\n
+    Licencia limitada: Te otorgamos una licencia limitada, no exclusiva y revocable para utilizar Travel Illay de acuerdo con estos términos.\n\n
+    5. Privacidad\n\n
+    Política de privacidad: Nuestra Política de Privacidad, que se incorpora a estos Términos, describe cómo recopilamos, utilizamos y protegemos tu información personal.\n\n
+    6. Descargo de responsabilidad\n\n
+    Información proporcionada: La información proporcionada en Travel Illay es solo para fines informativos y no debe considerarse como asesoramiento profesional.\n
+    Exactitud de la información: Aunque nos esforzamos por garantizar la exactitud de la información, no podemos garantizar que sea completa o libre de errores.\n
+    Disponibilidad del servicio: No garantizamos la disponibilidad continua o ininterrumpida de Travel Illay.\n\n
+    7. Limitación de responsabilidad\n\n
+    Exclusiones: En ningún caso [Nombre de tu empresa] será responsable por daños directos, indirectos, incidentales, consecuenciales o punitivos derivados del uso o la incapacidad de utilizar Travel Illay.\n\n
+    8. Modificación de los Términos\n\n
+    Cambios: Nos reservamos el derecho de modificar estos Términos en cualquier momento. Los cambios entrarán en vigencia a partir de su publicación en la aplicación.\n\n
+    9. Terminación\n\n
+    Rescisión: Podemos suspender o cancelar tu cuenta en cualquier momento y por cualquier motivo.\n\n
+    10. Ley aplicable y jurisdicción\n\n
+    Ley aplicable: Estos Términos se regirán e interpretarán de acuerdo con las leyes de [País].\n
+    Jurisdicción: Cualquier disputa que surja de estos Términos se someterá a la jurisdicción exclusiva de los tribunales de [Ciudad].
+    </string>
 </resources>
