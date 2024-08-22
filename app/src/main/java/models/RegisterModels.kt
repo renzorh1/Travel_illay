@@ -9,10 +9,10 @@ data class RegisterRequest(
 
 data class RegisterResponse(
     val message: String,
-    val newUser: User
+    val newUser: RegisteredUser
 )
 
-data class User(
+data class RegisteredUser(
     val id: Int,
     val Nombre: String,
     val NumeroCelular: String,

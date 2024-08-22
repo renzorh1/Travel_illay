@@ -1,18 +1,20 @@
-package com.example.travelillay
+package ui.register
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import com.example.travelillay.R
 import com.example.travelillay.ui.theme.TravelIllayTheme
 import kotlinx.coroutines.*
+import ui.base.BaseActivity
+import ui.main.MainActivity
 
-class SplashActivity : ComponentActivity() {
+class SplashActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

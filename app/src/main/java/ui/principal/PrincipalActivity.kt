@@ -1,4 +1,4 @@
-package com.example.travelillay
+package ui.principal
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -10,9 +10,12 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.PopupWindow
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.example.travelillay.R
+import ui.base.BaseActivity
+import ui.main.MainActivity
+import ui.profile.PerfilActivity
 
-class PrincipalActivity : AppCompatActivity() {
+class PrincipalActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.principal_activity)

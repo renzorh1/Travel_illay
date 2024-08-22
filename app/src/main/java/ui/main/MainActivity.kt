@@ -1,19 +1,22 @@
-package com.example.travelillay
+package ui.main
 
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import ui.principal.PrincipalActivity
+import com.example.travelillay.R
+import ui.register.RegisterActivity
 import com.example.travelillay.databinding.MainActivityBinding
-import com.example.travelillay.network.LoginRequest
-import com.example.travelillay.network.LoginResponse
-import com.example.travelillay.network.RetrofitClient
+import com.example.travelillay.models.LoginRequest
+import com.example.travelillay.models.LoginResponse
+import com.example.travelillay.data.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import ui.base.BaseActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var binding: MainActivityBinding
     private var isPasswordVisible = false

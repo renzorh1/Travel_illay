@@ -1,6 +1,7 @@
-package com.example.travelillay.network
+package com.example.travelillay.models
 
-data class RegisterRequest(
+data class User(
+    val id: Int,
     val Nombre: String,
     val NumeroCelular: String,
     val Correo: String,

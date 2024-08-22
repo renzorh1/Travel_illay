@@ -1,19 +1,22 @@
-package com.example.travelillay
+package ui.register
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import com.example.travelillay.R
 import com.example.travelillay.databinding.RegisterActivityBinding
-import com.example.travelillay.network.RetrofitClient
-import com.example.travelillay.network.RegisterRequest
-import com.example.travelillay.network.RegisterResponse
+import com.example.travelillay.models.RegisterRequest
+import com.example.travelillay.models.RegisterResponse
+import com.example.travelillay.data.network.RetrofitClient
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import ui.base.BaseActivity
+import ui.main.MainActivity
 
-class RegisterActivity : AppCompatActivity() {
+class RegisterActivity : BaseActivity() {
 
     private lateinit var binding: RegisterActivityBinding
 
