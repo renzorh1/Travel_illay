@@ -66,10 +66,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.constraintlayout)
 
-
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-
 
     implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)
@@ -80,4 +78,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation(libs.androidx.lifecycle.viewmodel.ktx) // Verifica esta línea
 }

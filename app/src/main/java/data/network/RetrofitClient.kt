@@ -13,12 +13,10 @@ object RetrofitClient {
             .build()
     }
 
-    // Método genérico para crear cualquier servicio API
     fun <T> createService(serviceClass: Class<T>): T {
         return retrofit.create(serviceClass)
     }
 
-    // Método específico para ApiService, si lo necesitas
     val apiService: ApiService by lazy {
         createService(ApiService::class.java)
     }
