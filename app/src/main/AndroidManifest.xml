@@ -45,5 +45,8 @@
         <activity
             android:name="ui.profile.PerfilActivity"
             android:exported="false" />
+
+        <activity android:name="ui.configuration.ConfigurationActivity" />
+
     </application>
 </manifest>

@@ -3,7 +3,8 @@ package com.example.travelillay.models
 data class Preferencias(
     val actividades_favoritas: List<String>,
     val horario_preferido: Horario,
-    val notificaciones_activadas: Boolean
+    val notificaciones_activadas: Boolean,
+    val idioma_preferido: String // Añadir el campo para el idioma preferido
 )
 
 data class Horario(

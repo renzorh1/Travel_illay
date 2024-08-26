@@ -11,6 +11,7 @@ import android.widget.PopupWindow
 import androidx.core.content.ContextCompat
 import com.example.travelillay.R
 import ui.base.BaseActivity
+import ui.configuration.ConfigurationActivity
 import ui.main.MainActivity
 import ui.profile.PerfilActivity
 
@@ -45,6 +46,11 @@ class PrincipalActivity : BaseActivity() {
 
         popupView.findViewById<View>(R.id.menuPerfil).setOnClickListener {
             startActivity(Intent(this, PerfilActivity::class.java))
+            popupWindow.dismiss()
+        }
+
+        popupView.findViewById<View>(R.id.menuConfiguracion).setOnClickListener {
+            startActivity(Intent(this, ConfigurationActivity::class.java))
             popupWindow.dismiss()
         }
 
