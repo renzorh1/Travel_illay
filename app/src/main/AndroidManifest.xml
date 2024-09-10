@@ -48,5 +48,9 @@
 
         <activity android:name="ui.configuration.ConfigurationActivity" />
 
+        <activity
+            android:name="ui.configuration.NotificationActivity"
+            android:exported="false" />
+
     </application>
 </manifest>
