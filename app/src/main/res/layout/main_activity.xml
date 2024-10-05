@@ -7,25 +7,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical"
-        android:padding="16dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="189dp"
-            android:contentDescription="Travel Illay background"
-            android:scaleType="centerCrop"
-            android:src="@drawable/travel_illay_background" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:text="Bienvenidos a Travel Illay"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+        android:padding="10dp"
+        android:layout_marginTop="150dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -33,21 +19,27 @@
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
             android:text="Inicio de sesión"
-            android:textSize="20sp"
+            android:textColor="#F45A5A"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/editTextEmailOrPhone"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:hint="Correo Electrónico"
+            android:layout_margin="16dp"
+            android:hint="Email o Número de celular"
+            android:background="@drawable/edit_text_border"
+            android:padding="12dp"
+            android:paddingStart="16dp"
             android:inputType="textEmailAddress" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_height="48dp"
+            android:layout_margin="16dp"
+            android:background="@drawable/edit_text_border"
+            android:paddingStart="16dp"
             android:orientation="horizontal">
 
             <EditText
@@ -56,6 +48,7 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:hint="Contraseña"
+                android:background="@android:color/transparent"
                 android:inputType="textPassword" />
 
             <ImageView
@@ -70,19 +63,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:layout_gravity="center"
             android:layout_marginTop="8dp"
             android:text="¿Olvidó su contraseña?"
             android:textColor="@android:color/black" />
 
         <Button
             android:id="@+id/buttonLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Siguiente"
+            android:layout_width="354dp"
+            android:layout_height="56dp"
+            android:layout_margin="16dp"
+            android:text="INGRESAR"
+            android:textSize="24dp"
             android:textColor="@android:color/white"
-            android:backgroundTint="@android:color/black" />
+            android:background="@drawable/edit_buttom_border" />
 
         <LinearLayout
             android:layout_width="wrap_content"

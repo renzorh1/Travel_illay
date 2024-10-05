@@ -15,69 +15,72 @@
         android:contentDescription="Regresar" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="251dp"
         android:layout_height="wrap_content"
-        android:text="Registro"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="left"
         android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginBottom="24dp"
+        android:text="!ÚNETE A
+ TRAVEL ILLAY !"
+        android:textColor="#F45A5A"
+        android:textSize="32dp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/etNombre"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="360dp"
+        android:layout_height="56dp"
+        android:padding="16dp"
         android:hint="Nombre"
         android:inputType="textPersonName"
         android:background="@drawable/edit_text_border"
-        android:padding="12dp"
         android:layout_marginBottom="16dp" />
 
     <EditText
         android:id="@+id/etNumeroCelular"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="360dp"
+        android:layout_height="56dp"
+        android:padding="16dp"
         android:hint="Número de celular"
         android:inputType="phone"
         android:background="@drawable/edit_text_border"
-        android:padding="12dp"
         android:layout_marginBottom="16dp" />
 
     <EditText
         android:id="@+id/etCorreo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="360dp"
+        android:layout_height="56dp"
+        android:padding="16dp"
         android:hint="Correo"
         android:inputType="textEmailAddress"
         android:background="@drawable/edit_text_border"
-        android:padding="12dp"
         android:layout_marginBottom="16dp" />
 
     <EditText
         android:id="@+id/etContrasena"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="360dp"
+        android:layout_height="56dp"
+        android:padding="16dp"
         android:hint="Contraseña"
         android:inputType="textPassword"
         android:background="@drawable/edit_text_border"
-        android:padding="12dp"
         android:layout_marginBottom="16dp" />
 
     <EditText
         android:id="@+id/etRepetirContrasena"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="360dp"
+        android:layout_height="56dp"
+        android:padding="16dp"
         android:hint="Repetir contraseña"
         android:inputType="textPassword"
         android:background="@drawable/edit_text_border"
-        android:padding="12dp"
         android:layout_marginBottom="16dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginLeft="26dp"
         android:layout_marginBottom="16dp">
 
         <CheckBox
@@ -97,9 +100,12 @@
 
     <Button
         android:id="@+id/btnRegistrarse"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Registrarse"
+        android:layout_width="354dp"
+        android:layout_height="56dp"
+        android:text="Registrar"
+        android:textSize="24dp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/edit_buttom_border"
         android:textAllCaps="false" />
 
 </LinearLayout>
