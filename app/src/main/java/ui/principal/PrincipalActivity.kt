@@ -6,14 +6,17 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.PopupWindow
 import androidx.core.content.ContextCompat
 import com.example.travelillay.R
 import ui.base.BaseActivity
 import ui.configuration.ConfigurationActivity
+import ui.itinerarios.OpcionesItinerario
 import ui.main.MainActivity
 import ui.profile.PerfilActivity
+import android.widget.LinearLayout
 
 class PrincipalActivity : BaseActivity() {
 
@@ -22,6 +25,22 @@ class PrincipalActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.principal_activity)
+
+        // Botón Explorar
+        val explorarButton = findViewById<Button>(R.id.explorarButton)
+        explorarButton.setOnClickListener {
+            // Intent para navegar a la actividad de selección de itinerario
+            val intent = Intent(this, OpcionesItinerario::class.java)
+            startActivity(intent)
+        }
+
+        // Botón Crear
+        val crearButton = findViewById<LinearLayout>(R.id.crearButton)
+        crearButton.setOnClickListener {
+            // Intent para navegar a OpcionesItinerario
+            val intent = Intent(this, OpcionesItinerario::class.java)
+            startActivity(intent)
+        }
 
         userId = getUserIdFromSharedPreferences()
 

@@ -60,6 +60,7 @@
             android:contentDescription="City View" />
 
         <Button
+            android:id="@+id/explorarButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Explorar"
@@ -76,14 +77,17 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:background="#FFFFFF">
 
+        <!-- Botón Inicio -->
         <LinearLayout
+            android:id="@+id/inicioButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <ImageView
                 android:layout_width="24dp"
@@ -97,12 +101,14 @@
                 android:text="Inicio" />
         </LinearLayout>
 
+        <!-- Botón Crear -->
         <LinearLayout
+            android:id="@+id/crearButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <ImageView
                 android:layout_width="24dp"
@@ -116,12 +122,14 @@
                 android:text="Crear" />
         </LinearLayout>
 
+        <!-- Botón Mapa -->
         <LinearLayout
+            android:id="@+id/mapaButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <ImageView
                 android:layout_width="24dp"
@@ -135,12 +143,14 @@
                 android:text="Mapa" />
         </LinearLayout>
 
+        <!-- Botón Itinerarios -->
         <LinearLayout
+            android:id="@+id/itinerariosButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <ImageView
                 android:layout_width="24dp"
