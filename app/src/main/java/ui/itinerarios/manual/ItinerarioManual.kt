@@ -19,6 +19,8 @@ import com.example.travelillay.R
 import ui.itinerarios.OpcionesItinerario
 import ui.principal.PrincipalActivity
 import java.util.Calendar
+import android.widget.Button
+
 
 class ItinerarioManual : AppCompatActivity() {
 
@@ -36,6 +38,13 @@ class ItinerarioManual : AppCompatActivity() {
         val relojInicioButton = findViewById<ImageView>(R.id.relojInicioButton)
         val relojFinButton = findViewById<ImageView>(R.id.relojFinButton)
 
+        // Referencia al botón "Siguiente"
+        val siguienteButton = findViewById<Button>(R.id.btnSiguiente)
+        siguienteButton.setOnClickListener {
+            // Navegar a ActividadPropuesto
+            val intent = Intent(this, ActividadPropuesto::class.java)
+            startActivity(intent)
+        }
         // Permitir escribir en la casilla de itinerario
         itinerarioEditText.setOnClickListener {
             itinerarioEditText.requestFocus()

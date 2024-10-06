@@ -61,6 +61,8 @@
 
         <activity android:name="ui.itinerarios.manual.ItinerarioManual" />
         <activity android:name="ui.itinerarios.automatico.ItinerarioAutomatico"/>
+        <activity android:name="ui.itinerarios.manual.ActividadPropuesto"></activity>
+        <activity android:name="ui.itinerarios.automatico.ItinerarioPropuesto"></activity>
     </application>
 
 

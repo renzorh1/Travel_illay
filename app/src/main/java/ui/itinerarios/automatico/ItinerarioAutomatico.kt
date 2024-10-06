@@ -31,6 +31,7 @@ class ItinerarioAutomatico : AppCompatActivity() {
         val horaFinTextView = findViewById<TextView>(R.id.horaFinTextView)
         val inicioButton = findViewById<LinearLayout>(R.id.inicioButton)
         val crearButton = findViewById<LinearLayout>(R.id.crearButton)
+        val siguienteButton = findViewById<Button>(R.id.btnSiguiente)
 
         // Permitir escribir en la casilla de itinerario
         itinerarioEditText.setOnClickListener {
@@ -75,6 +76,13 @@ class ItinerarioAutomatico : AppCompatActivity() {
             val intent = Intent(this, OpcionesItinerario::class.java)
             startActivity(intent)
         }
+
+        // Navegación al presionar el botón "Siguiente"
+        siguienteButton.setOnClickListener {
+            // Navegar a la actividad ActividadPropuesto
+            val intent = Intent(this, ItinerarioPropuesto::class.java)
+            startActivity(intent)
+        }
     }
 
     // Función para mostrar el TimePickerDialog, igual al de ItinerarioManual
@@ -108,4 +116,5 @@ class ItinerarioAutomatico : AppCompatActivity() {
         imm.hideSoftInputFromWindow(view.windowToken, 0)
         view.clearFocus()  // Quita el foco del EditText
     }
+
 }
