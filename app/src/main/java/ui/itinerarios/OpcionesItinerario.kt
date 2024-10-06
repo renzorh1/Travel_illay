@@ -10,6 +10,7 @@ import ui.itinerarios.automatico.ItinerarioAutomatico
 import ui.itinerarios.manual.ItinerarioManual
 import ui.principal.PrincipalActivity
 
+
 class OpcionesItinerario : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
