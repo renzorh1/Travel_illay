@@ -1,5 +1,7 @@
 package com.example.travelillay.data.network
 
+import com.example.travelillay.models.ItinerarioRequest
+import com.example.travelillay.models.ItinerarioResponse
 import com.example.travelillay.models.*
 import com.example.travelillay.models.UserBasicInfo
 import com.example.travelillay.models.Preferencias
@@ -25,6 +27,9 @@ interface ApiService {
 
     @PUT("api/users/update")
     fun updateUser(@Body user: UserBasicInfo): Call<Void>
+
+    @POST("/itinerario/guardar")
+    fun guardarItinerario(@Body itinerarioRequest: ItinerarioRequest): Call<ItinerarioResponse>
 
 
 }

@@ -1,5 +1,12 @@
 package ui.itinerarios.manual
 
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
+import android.widget.Toast
+
+
 import android.app.AlertDialog
 import android.app.TimePickerDialog
 import android.content.Context
@@ -20,6 +27,14 @@ import ui.itinerarios.OpcionesItinerario
 import ui.principal.PrincipalActivity
 import java.util.Calendar
 import android.widget.Button
+import com.example.travelillay.data.network.RetrofitClient
+
+import com.example.travelillay.models.ItinerarioRequest
+import com.example.travelillay.models.ItinerarioResponse
+
+
+
+import com.example.travelillay.data.network.ApiService
 
 
 class ItinerarioManual : AppCompatActivity() {
@@ -41,6 +56,41 @@ class ItinerarioManual : AppCompatActivity() {
         // Referencia al botón "Siguiente"
         val siguienteButton = findViewById<Button>(R.id.btnSiguiente)
         siguienteButton.setOnClickListener {
+
+            val itinerarioNombre = itinerarioEditText.text.toString()
+            val viajandoDesde = viajandoDesdeTextView.text.toString()
+            val horaInicio = horaInicioTextView.text.toString()
+            val horaFin = horaFinTextView.text.toString()
+            val usuarioId = 1 // Ajusta este ID del usuario según sea necesario
+
+            val itinerarioRequest = ItinerarioRequest(
+                Nombre = "Itinerario 4",
+                Lugar = "Arequipa, Perú",
+                HoraInicio = "09:00",
+                HoraFin = "11:00",
+                UsuarioId = 1 // Ajusta el ID del usuario según sea necesario
+            )
+
+            val apiService = RetrofitClient.create(ApiService::class.java)
+            val call = apiService.guardarItinerario(itinerarioRequest)
+
+            call.enqueue(object : Callback<ItinerarioResponse> {
+                override fun onResponse(
+                    call: Call<ItinerarioResponse>,
+                    response: Response<ItinerarioResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(this@ItinerarioManual, "Itinerario guardado con éxito", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@ItinerarioManual, "Error al guardar itinerario", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<ItinerarioResponse>, t: Throwable) {
+                    Toast.makeText(this@ItinerarioManual, "Error en la conexión: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+
             // Navegar a ActividadPropuesto
             val intent = Intent(this, ActividadPropuesto::class.java)
             startActivity(intent)
