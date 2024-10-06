@@ -39,6 +39,17 @@ import com.example.travelillay.data.network.ApiService
 
 class ItinerarioManual : AppCompatActivity() {
 
+    private fun obtenerUsuarioIdSesion(): Int? {
+        val userId = getSharedPreferences("TravelIllayPrefs", MODE_PRIVATE).getInt("userId", -1)
+        return if (userId <= 0) {
+            null // Retorna null si el ID no es válido
+        } else {
+            userId
+        }
+    }
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.itinerario_manual)  // Debe estar antes de cualquier referencia a vistas
@@ -61,14 +72,20 @@ class ItinerarioManual : AppCompatActivity() {
             val viajandoDesde = viajandoDesdeTextView.text.toString()
             val horaInicio = horaInicioTextView.text.toString()
             val horaFin = horaFinTextView.text.toString()
-            val usuarioId = 1 // Ajusta este ID del usuario según sea necesario
+
+            val usuarioId = obtenerUsuarioIdSesion() ?: run {
+                Toast.makeText(this, "ID de usuario no válido", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
             val itinerarioRequest = ItinerarioRequest(
-                Nombre = "Itinerario 4",
-                Lugar = "Arequipa, Perú",
-                HoraInicio = "09:00",
-                HoraFin = "11:00",
-                UsuarioId = 1 // Ajusta el ID del usuario según sea necesario
+
+
+                Nombre = itinerarioNombre,
+                Lugar = viajandoDesde,
+                HoraInicio = horaInicio,
+                HoraFin = horaFin,
+                UsuarioId = usuarioId
             )
 
             val apiService = RetrofitClient.create(ApiService::class.java)
