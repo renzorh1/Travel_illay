@@ -60,7 +60,7 @@
             android:exported="false" />
 
         <activity android:name="ui.itinerarios.manual.ItinerarioManual" />
-
+        <activity android:name="ui.itinerarios.automatico.ItinerarioAutomatico"/>
     </application>
 
 
