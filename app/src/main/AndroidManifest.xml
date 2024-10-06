@@ -59,6 +59,7 @@
             android:name="ui.itinerarios.OpcionesItinerario"
             android:exported="false" />
 
+        <activity android:name="ui.itinerarios.manual.ItinerarioManual" />
 
     </application>
 
