@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="76dp"
-        android:text="Inserte tus datos de viaje"
+        android:text="¿Qué es lo que quieres conocer?"
         android:textColor="@android:color/white"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -60,14 +60,18 @@
             android:padding="12dp"
             android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/itinerarioTextView"
+            <EditText
+                android:id="@+id/itinerarioEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Itinerario de viajes"
                 android:textSize="16sp"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:background="@drawable/rounded_black_border"
+                android:singleLine="true"
+                android:imeOptions="actionDone"
+                />
 
             <!-- Botón Lápiz -->
             <ImageButton
@@ -80,21 +84,8 @@
                 android:tint="@android:color/black" />
         </LinearLayout>
 
-        <!-- Título Viajando desde -->
-
-        <!-- Viajando desde -->
 
         <!-- Campo Hora de inicio y Hora de fin -->
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
-            android:text="Viajando desde"
-            android:textColor="#000000"
-            android:textSize="16sp" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -103,14 +94,12 @@
             android:gravity="center">
 
             <!-- Contenedor de la Hora de inicio -->
-
-            <!-- Separador -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -123,19 +112,21 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_black_border"
-                    android:gravity="center"
                     android:orientation="horizontal"
-                    android:padding="10dp">
+                    android:background="@drawable/rounded_black_border"
+                    android:padding="10dp"
+                    android:gravity="center">
 
                     <TextView
+                        android:id="@+id/horaInicioTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="13:00 pm"
-                        android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:textColor="#000000" />
 
                     <ImageView
+                        android:id="@+id/relojInicioButton"
                         android:layout_width="46dp"
                         android:layout_height="41dp"
                         android:layout_marginStart="8dp"
@@ -144,6 +135,7 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- Separador -->
             <View
                 android:layout_width="16dp"
                 android:layout_height="match_parent" />
@@ -173,6 +165,7 @@
                     android:padding="10dp">
 
                     <TextView
+                        android:id="@+id/horaFinTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="20:00 pm"
@@ -180,6 +173,7 @@
                         android:textSize="16sp" />
 
                     <ImageView
+                        android:id="@+id/relojFinButton"
                         android:layout_width="42dp"
                         android:layout_height="57dp"
                         android:layout_marginStart="8dp"

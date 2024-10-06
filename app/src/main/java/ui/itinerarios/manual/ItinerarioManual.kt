@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -11,17 +12,21 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.travelillay.R
+import ui.itinerarios.OpcionesItinerario
+import ui.principal.PrincipalActivity
 import java.util.Calendar
 
 class ItinerarioManual : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.itinerario_manual)
+        setContentView(R.layout.itinerario_manual)  // Debe estar antes de cualquier referencia a vistas
 
+        // Referencias a los botones y vistas del layout
         val itinerarioEditText = findViewById<EditText>(R.id.itinerarioEditText)
         val editButton = findViewById<ImageButton>(R.id.editButton)
         val mapButton = findViewById<ImageButton>(R.id.mapButton)
@@ -68,6 +73,22 @@ class ItinerarioManual : AppCompatActivity() {
         // Manejar clic en el botón de reloj para la Hora de fin
         relojFinButton.setOnClickListener {
             mostrarTimePicker(horaFinTextView)
+        }
+
+        // Referencia al botón "Inicio" en el footer
+        val inicioButton = findViewById<LinearLayout>(R.id.inicioButton)
+        inicioButton.setOnClickListener {
+            // Navegar a PrincipalActivity
+            val intent = Intent(this, PrincipalActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Referencia al botón "Crear" en el footer
+        val crearButton = findViewById<LinearLayout>(R.id.crearButton)
+        crearButton.setOnClickListener {
+            // Navegar a OpcionesItinerario
+            val intent = Intent(this, OpcionesItinerario::class.java)
+            startActivity(intent)
         }
     }
 
