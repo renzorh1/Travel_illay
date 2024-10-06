@@ -7,6 +7,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.example.travelillay.R
 import ui.itinerarios.automatico.ItinerarioAutomatico
+import ui.itinerarios.manual.ItinerarioManual
 import ui.principal.PrincipalActivity
 
 class OpcionesItinerario : AppCompatActivity() {
@@ -18,7 +19,9 @@ class OpcionesItinerario : AppCompatActivity() {
         // Referencia al botón "Crear mi ruta"
         val crearRutaButton = findViewById<Button>(R.id.createRouteButton)
         crearRutaButton.setOnClickListener {
-            // Aquí puedes agregar el Intent para navegar a otra actividad si es necesario
+            // Intent para navegar a ItinerarioManual
+            val intent = Intent(this, ItinerarioManual::class.java)
+            startActivity(intent)
         }
 
         // Referencia al botón "¡Sorpréndeme!"
