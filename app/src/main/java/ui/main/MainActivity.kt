@@ -83,6 +83,7 @@ class MainActivity : BaseActivity() {
                             navigateToPrincipalActivity()
                         } else {
                             showToast("ID de usuario no válido")
+                            
                         }
                     } ?: run {
                         showToast("Error al procesar la respuesta")
