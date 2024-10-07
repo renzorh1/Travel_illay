@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
-    <!-- Header con imagen de fondo -->
+    <!-- Header con imagen de fondo, Sergio estuvo aca -->
     <ImageView
         android:id="@+id/headerImage"
         android:layout_width="512dp"
