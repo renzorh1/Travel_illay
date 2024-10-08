@@ -28,7 +28,7 @@ interface ApiService {
     @PUT("api/users/update")
     fun updateUser(@Body user: UserBasicInfo): Call<Void>
 
-    @POST("/itinerario/guardar")
+    @POST("/api/itinerario/manual")
     fun guardarItinerario(@Body itinerarioRequest: ItinerarioRequest): Call<ItinerarioResponse>
 
 
