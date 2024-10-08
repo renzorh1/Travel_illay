@@ -15,6 +15,14 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+import android.content.Intent
+
+import ui.itinerarios.OpcionesItinerario
+
+import android.widget.LinearLayout
+
+import ui.principal.PrincipalActivity
+
 class ActividadPropuesto : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
@@ -35,7 +43,28 @@ class ActividadPropuesto : AppCompatActivity() {
 
         val apiService = retrofit.create(ApiService::class.java)
         cargarActividades(apiService)
+
+        // Footer de navegación
+        val inicioButton = findViewById<LinearLayout>(R.id.inicioButton)
+        inicioButton.setOnClickListener {
+            val intent = Intent(this, PrincipalActivity::class.java)
+            startActivity(intent)
+        }
+
+        val crearButton = findViewById<LinearLayout>(R.id.crearButton)
+        crearButton.setOnClickListener {
+            val intent = Intent(this, OpcionesItinerario::class.java)
+            startActivity(intent)
+        }
+
+        val mapaButton = findViewById<LinearLayout>(R.id.mapaButton)
+        mapaButton.setOnClickListener {
+            // Acción para el botón Mapa
+        }
+
     }
+
+
 
     private fun cargarActividades(apiService: ApiService) {
         apiService.obtenerActividades().enqueue(object : Callback<List<Actividad>> {
