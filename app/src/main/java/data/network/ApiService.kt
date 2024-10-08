@@ -5,6 +5,8 @@ import com.example.travelillay.models.ItinerarioResponse
 import com.example.travelillay.models.*
 import com.example.travelillay.models.UserBasicInfo
 import com.example.travelillay.models.Preferencias
+
+import com.example.travelillay.models.Actividad
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -30,6 +32,14 @@ interface ApiService {
 
     @POST("/api/itinerario/manual")
     fun guardarItinerario(@Body itinerarioRequest: ItinerarioRequest): Call<ItinerarioResponse>
+
+    @GET("api/actividades/obtener")
+    fun obtenerActividades(): Call<List<Actividad>>
+
+    @GET("api/itinerario/usuario/{usuarioId}")
+    fun obtenerItinerariosPorUsuario(
+        @Path("usuarioId") usuarioId: Int
+    ): Call<List<ItinerarioResponse>>
 
 
 }

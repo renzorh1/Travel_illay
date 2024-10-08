@@ -11,6 +11,9 @@ import ui.itinerarios.manual.ItinerarioManual
 import ui.principal.PrincipalActivity
 
 
+
+
+
 class OpcionesItinerario : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,5 +51,12 @@ class OpcionesItinerario : AppCompatActivity() {
             val intent = Intent(this, OpcionesItinerario::class.java)
             startActivity(intent)
         }
+
+        // Referencia al botón "Itinerarios" en el footer
+        val itinerariosButton = findViewById<LinearLayout>(R.id.itinerariosButton)
+        itinerariosButton.setOnClickListener {
+
+        }
     }
+
 }
