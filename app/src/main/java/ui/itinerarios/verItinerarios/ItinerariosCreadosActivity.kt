@@ -6,9 +6,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.travelillay.R
+
+import com.example.travelillay.models.ItinerarioResponse
+
+import ui.itinerarios.OpcionesItinerario
+
+import android.content.Intent
+
+
+import android.widget.LinearLayout
+
+import ui.principal.PrincipalActivity
+
+
 import com.example.travelillay.data.network.ApiService
 import com.example.travelillay.data.network.RetrofitClient
-import com.example.travelillay.models.ItinerarioResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,11 +43,19 @@ class ItinerariosCreadosActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "ID de usuario no válido", Toast.LENGTH_SHORT).show()
         }
-    }
 
-    private fun obtenerUsuarioIdSesion(): Int? {
-        val userId = getSharedPreferences("TravelIllayPrefs", MODE_PRIVATE).getInt("userId", -1)
-        return if (userId <= 0) null else userId
+        // Footer de navegación
+        val inicioButton = findViewById<LinearLayout>(R.id.inicioButton)
+        inicioButton.setOnClickListener {
+            val intent = Intent(this, PrincipalActivity::class.java)
+            startActivity(intent)
+        }
+
+        val crearButton = findViewById<LinearLayout>(R.id.crearButton)
+        crearButton.setOnClickListener {
+            val intent = Intent(this, OpcionesItinerario::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun cargarItinerarios(usuarioId: Int) {
@@ -47,18 +67,23 @@ class ItinerariosCreadosActivity : AppCompatActivity() {
                 call: Call<List<ItinerarioResponse>>,
                 response: Response<List<ItinerarioResponse>>
             ) {
-                if (response.isSuccessful) {
-                    val itinerarios = response.body() ?: emptyList()
+                if (response.isSuccessful && response.body() != null) {
+                    val itinerarios = response.body()!!
                     itinerarioAdapter = ItinerarioAdapter(itinerarios)
                     recyclerView.adapter = itinerarioAdapter
                 } else {
-                    Toast.makeText(this@ItinerariosCreadosActivity, "Error al obtener itinerarios", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@ItinerariosCreadosActivity, "Error al cargar itinerarios", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<List<ItinerarioResponse>>, t: Throwable) {
-                Toast.makeText(this@ItinerariosCreadosActivity, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ItinerariosCreadosActivity, "Error en la conexión: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun obtenerUsuarioIdSesion(): Int? {
+        val userId = getSharedPreferences("TravelIllayPrefs", MODE_PRIVATE).getInt("userId", -1)
+        return if (userId <= 0) null else userId
     }
 }
