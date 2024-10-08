@@ -2,25 +2,18 @@
 package ui.itinerarios.verItinerarios
 
 
-import com.example.travelillay.models.ItinerarioResponse
-
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.travelillay.R
+import com.example.travelillay.models.ItinerarioResponse
 
-
-
-
-class ItinerarioAdapter(private val itinerarios: List<ItinerarioResponse>) :
-    RecyclerView.Adapter<ItinerarioAdapter.ItinerarioViewHolder>() {
+class ItinerarioAdapter(private val itinerarios: List<ItinerarioResponse>) : RecyclerView.Adapter<ItinerarioAdapter.ItinerarioViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItinerarioViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_itinerario, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_itinerario, parent, false)
         return ItinerarioViewHolder(view)
     }
 

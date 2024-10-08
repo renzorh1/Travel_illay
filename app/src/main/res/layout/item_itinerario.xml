@@ -26,5 +26,4 @@
         android:layout_height="wrap_content"
         android:text="Hora Inicio - Hora Fin"
         android:textSize="14sp" />
-
 </LinearLayout>

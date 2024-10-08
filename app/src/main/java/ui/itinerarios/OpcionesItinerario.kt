@@ -10,7 +10,7 @@ import ui.itinerarios.automatico.ItinerarioAutomatico
 import ui.itinerarios.manual.ItinerarioManual
 import ui.principal.PrincipalActivity
 
-
+import ui.itinerarios.verItinerarios.ItinerariosCreadosActivity
 
 
 
@@ -52,10 +52,13 @@ class OpcionesItinerario : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Referencia al botón "Itinerarios" en el footer
+
+
         val itinerariosButton = findViewById<LinearLayout>(R.id.itinerariosButton)
         itinerariosButton.setOnClickListener {
-
+            // Navegar a ItinerariosCreadosActivity
+            val intent = Intent(this, ItinerariosCreadosActivity::class.java)
+            startActivity(intent)
         }
     }
 

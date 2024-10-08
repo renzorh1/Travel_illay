@@ -87,6 +87,8 @@ dependencies {
     implementation ("androidx.appcompat:appcompat:1.3.12")
     implementation ("androidx.constraintlayout:constraintlayout:2.0.4")
 
+    implementation ("androidx.recyclerview:recyclerview:1.2.1")
+
 
 
     implementation(libs.androidx.lifecycle.viewmodel.ktx) // Verifica esta línea

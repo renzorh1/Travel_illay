@@ -37,9 +37,7 @@ interface ApiService {
     fun obtenerActividades(): Call<List<Actividad>>
 
     @GET("api/itinerario/usuario/{usuarioId}")
-    fun obtenerItinerariosPorUsuario(
-        @Path("usuarioId") usuarioId: Int
-    ): Call<List<ItinerarioResponse>>
+    fun obtenerItinerariosPorUsuario(@Path("usuarioId") usuarioId: Int): Call<List<ItinerarioResponse>>
 
 
 }
