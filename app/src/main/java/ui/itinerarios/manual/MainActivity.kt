@@ -1,6 +1,14 @@
 package ui.itinerarios.manual
-import com.example.travelillay.ui.ActividadAdapter
+
+import android.content.Context
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -8,45 +16,72 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.travelillay.R
 import com.example.travelillay.data.network.RetrofitClient
 import com.example.travelillay.models.Actividad1
+import com.example.travelillay.ui.ActividadAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
 import com.example.travelillay.data.network.ApiService
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var actividadAdapter: ActividadAdapter
     private lateinit var recyclerView: RecyclerView
+    private lateinit var searchEditText: EditText
+    private lateinit var tipoSpinner: Spinner
+    private var actividadesList: List<Actividad1> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         recyclerView = findViewById(R.id.recyclerView)
+        searchEditText = findViewById(R.id.searchEditText)
+        tipoSpinner = findViewById(R.id.tipoSpinner)
+
         recyclerView.layoutManager = LinearLayoutManager(this)
         actividadAdapter = ActividadAdapter(emptyList())
         recyclerView.adapter = actividadAdapter
 
+        configurarSpinner()
         cargarActividades()
+
+        searchEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                ocultarTeclado(searchEditText)
+                aplicarFiltros(searchEditText.text.toString(), tipoSpinner.selectedItem.toString())
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    private fun configurarSpinner() {
+        val tipos = resources.getStringArray(R.array.tipo_actividades)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, tipos)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        tipoSpinner.adapter = adapter
+
+        tipoSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                aplicarFiltros(searchEditText.text.toString(), tipos[position])
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
     }
 
     private fun cargarActividades() {
-
         val apiService = RetrofitClient.create(ApiService::class.java)
         val call = apiService.obtenerActividades()
 
         call.enqueue(object : Callback<List<Actividad1>> {
             override fun onResponse(call: Call<List<Actividad1>>, response: Response<List<Actividad1>>) {
                 if (response.isSuccessful) {
-                    val actividades = response.body() ?: emptyList()
-
-                    // Log para verificar los datos obtenidos, incluyendo Lugar
-                    actividades.forEach { actividad ->
-                        Log.d("Actividad", "Nombre: ${actividad.Nombre}, Tipo: ${actividad.Tipo}, Calificación: ${actividad.Calificacion}, Lugar: ${actividad.Lugar}")
-                    }
-
-                    actividadAdapter.actualizarActividades(actividades)
+                    actividadesList = response.body() ?: emptyList()
+                    actividadAdapter.actualizarActividades(actividadesList)
                 } else {
                     Log.e("API Error", "Error al cargar actividades: ${response.errorBody()?.string()}")
                     Toast.makeText(this@MainActivity, "Error al cargar actividades", Toast.LENGTH_SHORT).show()
@@ -58,5 +93,20 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity, "Error de conexión", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun aplicarFiltros(nombre: String, tipo: String) {
+        val listaFiltrada = actividadesList.filter {
+            it.Nombre.contains(nombre, ignoreCase = true) && (tipo == "Todos" || it.Tipo == tipo)
+        }
+        actividadAdapter.actualizarActividades(listaFiltrada)
+    }
+
+    private fun ocultarTeclado(view: EditText) {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+        view.clearFocus()
+    }
 }
-}
+
+
