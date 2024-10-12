@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tipo_actividades">
+        <item>Todos</item>
+        <item>park</item>
+        <item>restaurant</item>
+        <item>point_of_interest</item>
+        <item>tourist_attraction</item>
+        <item>museum</item>
+        <item>library</item>
+    </string-array>
+</resources>
