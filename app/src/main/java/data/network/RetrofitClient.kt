@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
     // Cambia esto a tu dirección IP y puerto
-    private const val BASE_URL = "http://192.168.18.33:3000/"
+    private const val BASE_URL = "http://192.168.190.1:3000/"
 
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
@@ -20,5 +20,9 @@ object RetrofitClient {
 
     val apiService: ApiService by lazy {
         createService(ApiService::class.java)
+    }
+
+    fun <T> create(service: Class<T>): T {
+        return retrofit.create(service)
     }
 }

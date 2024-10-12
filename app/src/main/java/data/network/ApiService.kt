@@ -28,4 +28,7 @@ interface ApiService {
     @PUT("api/users/update/activities/{id}")
     fun updateUserActivities(@Path("id") userId: Int, @Body activities: List<Actividad>): Call<Void>
 
+    @POST("api/itinerarios/crear")
+    fun crearItinerario(@Body itinerario: Itinerario): Call<Itinerario>
+
 }

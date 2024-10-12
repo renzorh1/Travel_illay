@@ -2,6 +2,7 @@ package ui.principal
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import com.example.travelillay.R
@@ -9,6 +10,7 @@ import ui.base.BaseActivity
 import ui.main.MainActivity
 import ui.profile.PerfilActivity
 import ui.configuration.ConfigurationActivity
+import ui.itinerarios.OpcionesItinerario
 
 class PrincipalActivity : BaseActivity() {
 
@@ -17,6 +19,22 @@ class PrincipalActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.principal_activity)
+
+        // Botón Explorar
+        val explorarButton = findViewById<Button>(R.id.explorarButton)
+        explorarButton.setOnClickListener {
+            // Intent para navegar a la actividad de selección de itinerario
+            val intent = Intent(this, OpcionesItinerario::class.java)
+            startActivity(intent)
+        }
+
+        // Botón Crear
+        val crearButton = findViewById<LinearLayout>(R.id.crearButton)
+        crearButton.setOnClickListener {
+            // Intent para navegar a OpcionesItinerario
+            val intent = Intent(this, OpcionesItinerario::class.java)
+            startActivity(intent)
+        }
 
         userId = getUserIdFromSharedPreferences() ?: run {
             showToast("Error: ID de usuario no encontrado")
