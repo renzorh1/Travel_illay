@@ -2,159 +2,52 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/restaurant_background">
+    android:background="#FFFFFF">
 
+    <!-- Header -->
+    <include layout="@layout/header_layout"/>
+
+
+    <!-- Configuration Content -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/headerLayout"
+        android:layout_above="@id/bottomNavigation"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_above="@id/bottomNavigation">
+        android:padding="16dp">
 
-        <LinearLayout
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Configuración"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp"/>
+
+        <Button
+            android:id="@+id/idiomasButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:text="Idiomas"
+            android:textAlignment="textStart"
+            android:padding="16dp"
+            android:background="@drawable/rounded_button_background"
+            android:layout_marginBottom="16dp"/>
 
-            <ImageButton
-                android:id="@+id/backButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:padding="12dp"
-                android:src="@drawable/ic_back_arrow"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Back" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Configuración"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:contentDescription="Parrot icon"
-                android:src="@drawable/travel_illay_logo" />
-        </LinearLayout>
-
-        <ScrollView
+        <Button
+            android:id="@+id/preferenciasButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:text="Preferencias"
+            android:textAlignment="textStart"
+            android:padding="16dp"
+            android:background="@drawable/rounded_button_background"
+            android:layout_marginBottom="16dp"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:background="@android:color/white"
-                    android:padding="16dp"
-                    android:text="Idiomas"
-                    android:textAlignment="textStart" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:background="@android:color/white"
-                    android:padding="16dp"
-                    android:text="Notificaciones"
-                    android:textAlignment="textStart" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/white"
-                    android:padding="16dp"
-                    android:text="Preferencias"
-                    android:textAlignment="textStart" />
-            </LinearLayout>
-        </ScrollView>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/bottomNavigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:padding="16dp"
-        android:background="@android:color/white">
+    <!-- Bottom Navigation -->
+    <include layout="@layout/bottom_navigation"/>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_home"
-                android:contentDescription="Inicio" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Inicio" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_create"
-                android:contentDescription="Crear" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Crear" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_map"
-                android:contentDescription="Mapa" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mapa" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_itinerary"
-                android:contentDescription="Itinerarios" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Itinerarios" />
-        </LinearLayout>
-    </LinearLayout>
 </RelativeLayout>

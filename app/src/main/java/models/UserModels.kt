@@ -1,10 +1,24 @@
 package com.example.travelillay.models
 
-data class User(
+// Para obtener los datos del usuario
+data class GetUserResponse(
+    val success: Boolean,
+    val message: String,
+    val data: UserBasicInfo
+)
+
+
+// Para actualizar el usuario
+data class UpdateUserRequest(
     val id: Int,
-    val Nombre: String,
-    val Celular: String,
-    val Correo: String,
-    val Contrasena: String,
-    val Preferencias: Preferencias? = null
+    val nombre: String?,
+    val numero_celular: String?,
+    val correo: String?,
+    val contrasena: String?
+)
+
+data class UpdateUserResponse(
+    val success: Boolean,
+    val message: String,
+    val data: UserBasicInfo
 )

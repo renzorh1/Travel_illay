@@ -2,227 +2,129 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/restaurant_background">
+    android:background="#FFFFFF">
 
-    <LinearLayout
+    <!-- Header -->
+    <include layout="@layout/header_layout" />
+
+    <!-- Preferences Content -->
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_above="@id/bottomNavigation">
+        android:layout_below="@id/headerLayout"
+        android:layout_above="@id/bottomNavigation"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/backButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:padding="12dp"
-                android:src="@drawable/ic_back_arrow"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Back" />
+            android:orientation="vertical"
+            android:padding="16dp">
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="Preferencias"
                 android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginBottom="24dp" />
 
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:contentDescription="Parrot icon"
-                android:src="@drawable/travel_illay_logo" />
-        </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Actividades Favoritas:"
+                android:textSize="18sp"
+                android:layout_marginBottom="16dp" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            <CheckBox
+                android:id="@+id/restaurantesCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Restaurantes"
+                android:layout_marginBottom="8dp" />
 
+            <CheckBox
+                android:id="@+id/parquesCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Parques"
+                android:layout_marginBottom="8dp" />
+
+            <CheckBox
+                android:id="@+id/museosCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Museos"
+                android:layout_marginBottom="8dp" />
+
+            <CheckBox
+                android:id="@+id/libreriaCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Librería"
+                android:layout_marginBottom="24dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Horarios Preferidos:"
+                android:textSize="18sp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Selector de tiempo para el inicio -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:text="Inicio:"
+                    android:textSize="16sp" />
+
+                <TimePicker
+                    android:id="@+id/inicioTimePicker"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:timePickerMode="spinner" />
+            </LinearLayout>
+
+            <!-- Selector de tiempo para el fin -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@android:color/white"
-                android:padding="16dp">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Actividades Favoritas"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp"/>
+                    android:text="Fin:"
+                    android:textSize="16sp"
+                    android:layout_marginEnd="16dp" />
 
-                <CheckBox
-                    android:id="@+id/cbRestaurantes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Restaurantes"/>
-
-                <CheckBox
-                    android:id="@+id/cbParques"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Parques"/>
-
-                <CheckBox
-                    android:id="@+id/cbMuseos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Museos"/>
-
-                <CheckBox
-                    android:id="@+id/cbEventos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Eventos"/>
-
-                <CheckBox
-                    android:id="@+id/cbClubes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Clubes"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Horario Preferido"
-                    android:textStyle="bold"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="8dp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Inicio:"
-                        android:layout_marginEnd="8dp"/>
-
-                    <EditText
-                        android:id="@+id/etHoraInicio"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:inputType="time"
-                        android:hint="HH:MM"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Fin:"
-                        android:layout_marginEnd="8dp"/>
-
-                    <EditText
-                        android:id="@+id/etHoraFin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:inputType="time"
-                        android:hint="HH:MM"/>
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/btnGuardar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Guardar Preferencias"
-                    android:layout_marginTop="16dp"/>
-
+                <TimePicker
+                    android:id="@+id/finTimePicker"
+                    android:layout_width="0dp"
+                    android:layout_height="149dp"
+                    android:layout_weight="1"
+                    android:timePickerMode="spinner" />
             </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/bottomNavigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:padding="16dp"
-        android:background="@android:color/white">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_home"
-                android:contentDescription="Inicio" />
-            <TextView
+            <!-- Botón de guardar -->
+            <Button
+                android:id="@+id/guardarButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Inicio" />
+                android:text="Guardar"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp" />
         </LinearLayout>
+    </ScrollView>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_create"
-                android:contentDescription="Crear" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Crear" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_map"
-                android:contentDescription="Mapa" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mapa" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_itinerary"
-                android:contentDescription="Itinerarios" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Itinerarios" />
-        </LinearLayout>
-    </LinearLayout>
+    <!-- Bottom Navigation -->
+    <include layout="@layout/bottom_navigation" />
 </RelativeLayout>

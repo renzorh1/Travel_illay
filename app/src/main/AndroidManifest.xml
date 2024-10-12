@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
 
     <application
         android:allowBackup="true"
@@ -14,9 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TravelIllay"
         android:networkSecurityConfig="@xml/network_security_config"
-
-
-
         tools:targetApi="31">
 
         <activity
@@ -28,16 +28,9 @@
             </intent-filter>
         </activity>
 
-
-
         <activity
             android:name="ui.main.MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:exported="true" />
 
         <activity
             android:name="ui.register.RegisterActivity"
@@ -52,23 +45,11 @@
             android:exported="false" />
 
         <activity android:name="ui.configuration.ConfigurationActivity" />
-
         <activity
-            android:name="ui.configuration.NotificationActivity"
+            android:name="ui.configuration.PreferencesActivity"
             android:exported="false" />
 
-        <activity
-            android:name="ui.itinerarios.OpcionesItinerario"
-            android:exported="false" />
-
-        <activity android:name="ui.itinerarios.manual.ItinerarioManual" />
-        <activity android:name="ui.itinerarios.automatico.ItinerarioAutomatico"/>
-        <activity android:name="ui.itinerarios.manual.ActividadPropuesto"></activity>
-        <activity android:name="ui.itinerarios.automatico.ItinerarioPropuesto"></activity>
-        <activity android:name="ui.itinerarios.verItinerarios.ItinerariosCreadosActivity" />
 
     </application>
-
-
 
 </manifest>

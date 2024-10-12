@@ -2,8 +2,8 @@ package com.example.travelillay.models
 
 data class UserBasicInfo(
     val id: Int,
-    val Nombre: String,
-    val Celular: String,
-    val Correo: String,
-    val Contrasena: String
+    val nombre: String,
+    val correo: String,
+    val numero_celular: String,
+    val contrasena: String // Asegúrate de que esto esté protegido adecuadamente
 )

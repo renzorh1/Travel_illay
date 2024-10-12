@@ -68,8 +68,6 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation(libs.androidx.appcompat)
@@ -81,15 +79,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    implementation ("androidx.recyclerview:recyclerview:1.2.1")
-
-    implementation ("androidx.appcompat:appcompat:1.3.12")
-    implementation ("androidx.constraintlayout:constraintlayout:2.0.4")
-
-    implementation ("androidx.recyclerview:recyclerview:1.2.1")
-
-
-
-    implementation(libs.androidx.lifecycle.viewmodel.ktx) // Verifica esta línea
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    implementation("androidx.appcompat:appcompat:1.3.12")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
 }
+

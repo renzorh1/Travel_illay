@@ -1,87 +1,190 @@
+package ui.configuration
+
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
-import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.TimePicker
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import org.json.JSONArray
-import org.json.JSONObject
 import com.example.travelillay.R
+import com.example.travelillay.data.network.ApiService
+import com.example.travelillay.data.network.RetrofitClient
+import com.example.travelillay.models.Preferencias
+import com.example.travelillay.models.Actividad
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import ui.base.BaseActivity
+import ui.main.MainActivity
+import ui.principal.PrincipalActivity
+import ui.profile.PerfilActivity
 
+class PreferencesActivity : BaseActivity() {
 
-class PreferencesActivity : AppCompatActivity() {
-
-    private lateinit var cbRestaurantes: CheckBox
-    private lateinit var cbParques: CheckBox
-    private lateinit var cbMuseos: CheckBox
-    private lateinit var cbEventos: CheckBox
-    private lateinit var cbClubes: CheckBox
-    private lateinit var etHoraInicio: EditText
-    private lateinit var etHoraFin: EditText
-    private lateinit var btnGuardar: Button
+    private lateinit var apiService: ApiService
+    private var userId: Int = 1 // Id del usuario, esto lo puedes obtener dinámicamente
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.preferences_activity)
 
-        initializeViews()
-        loadPreferences()
-        setupSaveButton()
+        apiService = RetrofitClient.apiService
+
+        // Configura el botón de inicio
+        val inicioButton = findViewById<LinearLayout>(R.id.inicioButton)
+        inicioButton.setOnClickListener {
+            startActivity(Intent(this, PrincipalActivity::class.java))
+            finish()
+        }
+
+        // Configura el botón de menú
+        val menuButton = findViewById<ImageButton>(R.id.menuButton)
+        menuButton.setOnClickListener { v ->
+            showPopupMenu(v, {
+                startActivity(Intent(this, PerfilActivity::class.java))
+            }, {
+                handleLogout()
+            }, {
+                startActivity(Intent(this, ConfigurationActivity::class.java))
+            })
+        }
+
+        // Configura los TimePickers para el inicio y fin del horario
+        val inicioTimePicker = findViewById<TimePicker>(R.id.inicioTimePicker)
+        val finTimePicker = findViewById<TimePicker>(R.id.finTimePicker)
+        setupTimePicker(inicioTimePicker)
+        setupTimePicker(finTimePicker)
+
+        // Configura los CheckBoxes para las actividades favoritas
+        val restaurantesCheckBox = findViewById<CheckBox>(R.id.restaurantesCheckBox)
+        val parquesCheckBox = findViewById<CheckBox>(R.id.parquesCheckBox)
+        val museosCheckBox = findViewById<CheckBox>(R.id.museosCheckBox)
+        val libreriaCheckBox = findViewById<CheckBox>(R.id.libreriaCheckBox)
+
+        // Cargar las preferencias del usuario desde la API
+        loadPreferences(restaurantesCheckBox, parquesCheckBox, museosCheckBox, libreriaCheckBox, inicioTimePicker, finTimePicker)
+
+        // Botón de guardar preferencias
+        val guardarButton = findViewById<Button>(R.id.guardarButton)
+        guardarButton.setOnClickListener {
+            val horaInicio = String.format("%02d:%02d", inicioTimePicker.hour, inicioTimePicker.minute)
+            val horaFin = String.format("%02d:%02d", finTimePicker.hour, finTimePicker.minute)
+
+            // Obtener las actividades seleccionadas
+            val actividadesSeleccionadas = mutableListOf<String>()
+            if (restaurantesCheckBox.isChecked) actividadesSeleccionadas.add("Restaurantes")
+            if (parquesCheckBox.isChecked) actividadesSeleccionadas.add("Parques")
+            if (museosCheckBox.isChecked) actividadesSeleccionadas.add("Museos")
+            if (libreriaCheckBox.isChecked) actividadesSeleccionadas.add("Librería")
+
+            // Enviar preferencias al servidor
+            savePreferences(horaInicio, horaFin, actividadesSeleccionadas)
+        }
     }
 
-    private fun initializeViews() {
-        cbRestaurantes = findViewById(R.id.cbRestaurantes)
-        cbParques = findViewById(R.id.cbParques)
-        cbMuseos = findViewById(R.id.cbMuseos)
-        cbEventos = findViewById(R.id.cbEventos)
-        cbClubes = findViewById(R.id.cbClubes)
-        etHoraInicio = findViewById(R.id.etHoraInicio)
-        etHoraFin = findViewById(R.id.etHoraFin)
-        btnGuardar = findViewById(R.id.btnGuardar)
+    private fun setupTimePicker(timePicker: TimePicker) {
+        timePicker.setIs24HourView(true)
     }
 
-    private fun loadPreferences() {
-        // Aquí cargarías las preferencias guardadas y actualizarías la UI
-        // Por ahora, lo dejaremos vacío
-    }
+    private fun loadPreferences(
+        restaurantesCheckBox: CheckBox,
+        parquesCheckBox: CheckBox,
+        museosCheckBox: CheckBox,
+        libreriaCheckBox: CheckBox,
+        inicioTimePicker: TimePicker,
+        finTimePicker: TimePicker
+    ) {
+        Log.d("PreferencesActivity", "Cargando preferencias para el usuario $userId")
+        apiService.getUserPreferences(userId).enqueue(object : Callback<Preferencias> {
+            override fun onResponse(call: Call<Preferencias>, response: Response<Preferencias>) {
+                Log.d("PreferencesActivity", "Respuesta de la API: ${response.code()}")
+                if (response.isSuccessful) {
+                    val preferencias = response.body()
+                    preferencias?.let {
+                        // Cargar actividades favoritas
+                        val actividades = it.actividades_favoritas.split(", ").map { it.trim() } // Separar y limpiar
+                        restaurantesCheckBox.isChecked = actividades.contains("Restaurantes")
+                        parquesCheckBox.isChecked = actividades.contains("Parques")
+                        museosCheckBox.isChecked = actividades.contains("Museos")
+                        libreriaCheckBox.isChecked = actividades.contains("Librería")
 
-    private fun setupSaveButton() {
-        btnGuardar.setOnClickListener {
-            if (validateInputs()) {
-                savePreferences()
+                        // Cargar horarios preferidos
+                        it.hora_inicio_preferida?.let { horaInicio ->
+                            inicioTimePicker.setHour(horaInicio.substring(11, 13).toInt())
+                            inicioTimePicker.setMinute(horaInicio.substring(14, 16).toInt())
+                        }
+                        it.hora_fin_preferida?.let { horaFin ->
+                            finTimePicker.setHour(horaFin.substring(11, 13).toInt())
+                            finTimePicker.setMinute(horaFin.substring(14, 16).toInt())
+                        }
+                    }
+                } else {
+                    Log.e("PreferencesActivity", "Error al cargar preferencias: ${response.errorBody()?.string()}")
+                    showToast("Error al cargar las preferencias")
+                }
             }
-        }
+
+            override fun onFailure(call: Call<Preferencias>, t: Throwable) {
+                Log.e("PreferencesActivity", "Error de conexión: ${t.message}", t)
+                showToast("Error de conexión: ${t.localizedMessage}")
+            }
+        })
     }
 
-    private fun validateInputs(): Boolean {
-        val timeRegex = Regex("^([01]?[0-9]|2[0-3]):[0-5][0-9]$")
-        if (!timeRegex.matches(etHoraInicio.text.toString()) || !timeRegex.matches(etHoraFin.text.toString())) {
-            Toast.makeText(this, "Por favor, ingrese horarios válidos (HH:MM)", Toast.LENGTH_SHORT).show()
-            return false
-        }
-        return true
+
+    private fun savePreferences(horaInicio: String, horaFin: String, actividades: List<String>) {
+        Log.d("PreferencesActivity", "Guardando preferencias: horaInicio=$horaInicio, horaFin=$horaFin, actividades=$actividades")
+
+        // Enviar horarios al servidor
+        apiService.updateUserSchedule(userId, mapOf(
+            "hora_inicio_preferida" to "1970-01-01T$horaInicio:00.000Z",
+            "hora_fin_preferida" to "1970-01-01T$horaFin:00.000Z"
+        )).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                Log.d("PreferencesActivity", "Respuesta de la API para guardar horario: ${response.code()}")
+                if (response.isSuccessful) {
+                    showToast("Horario guardado exitosamente")
+                } else {
+                    Log.e("PreferencesActivity", "Error al guardar horario: ${response.errorBody()?.string()}")
+                    showToast("Error al guardar el horario")
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.e("PreferencesActivity", "Error de conexión al guardar horario: ${t.message}", t)
+                showToast("Error de conexión: ${t.localizedMessage}")
+            }
+        })
+
+        // Crear una lista de actividades
+        val actividadesList = actividades.map { Actividad(it) } // Asegúrate de que Actividad tenga un constructor adecuado
+
+        // Llamada a la API para guardar actividades
+        apiService.updateUserActivities(userId, actividadesList).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                Log.d("PreferencesActivity", "Respuesta de la API para guardar actividades: ${response.code()}")
+                if (response.isSuccessful) {
+                    showToast("Actividades guardadas exitosamente")
+                } else {
+                    Log.e("PreferencesActivity", "Error al guardar actividades: ${response.errorBody()?.string()}")
+                    showToast("Error al guardar las actividades")
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.e("PreferencesActivity", "Error de conexión al guardar actividades: ${t.message}", t)
+                showToast("Error de conexión: ${t.localizedMessage}")
+            }
+        })
     }
 
-    private fun savePreferences() {
-        val actividadesFavoritas = JSONArray()
-        if (cbRestaurantes.isChecked) actividadesFavoritas.put("Restaurantes")
-        if (cbParques.isChecked) actividadesFavoritas.put("Parques")
-        if (cbMuseos.isChecked) actividadesFavoritas.put("Museos")
-        if (cbEventos.isChecked) actividadesFavoritas.put("Eventos")
-        if (cbClubes.isChecked) actividadesFavoritas.put("Clubes")
-
-        val horarioPreferido = JSONObject().apply {
-            put("inicio", etHoraInicio.text.toString())
-            put("fin", etHoraFin.text.toString())
-        }
-
-        val preferences = JSONObject().apply {
-            put("actividades_favoritas", actividadesFavoritas)
-            put("horario_preferido", horarioPreferido)
-        }
-
-        // Aquí guardarías las preferencias en la base de datos o SharedPreferences
-        // Por ahora, solo mostraremos un mensaje
-        Toast.makeText(this, "Preferencias guardadas: $preferences", Toast.LENGTH_LONG).show()
+    private fun handleLogout() {
+        getSharedPreferences("TravelIllayPrefs", MODE_PRIVATE).edit().clear().apply()
+        showToast("Sesión cerrada")
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 }

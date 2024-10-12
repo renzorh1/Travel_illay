@@ -29,11 +29,6 @@ class RegisterActivity : BaseActivity() {
             finish()
         }
 
-        // Manejar la acción del texto "Aceptar términos y condiciones"
-        binding.tvTerminos.setOnClickListener {
-            showTermsDialog()
-        }
-
         // Manejar la acción del botón de registro
         binding.btnRegistrarse.setOnClickListener {
             val nombre = binding.etNombre.text.toString().trim()
@@ -47,23 +42,28 @@ class RegisterActivity : BaseActivity() {
                 return@setOnClickListener
             }
 
+            // Validar que el número de celular tenga exactamente 9 dígitos
+            if (celular.length != 9) {
+                Toast.makeText(this, "El número de celular debe tener exactamente 9 dígitos.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             if (contrasena != repetirContrasena) {
                 Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val request = RegisterRequest(nombre, celular, correo, contrasena)
+            // Crear el objeto de solicitud de registro
+            val request = RegisterRequest(
+                nombre = nombre,
+                numero_celular = celular, // Usa 'numero_celular' aquí
+                correo = correo,
+                contrasena = contrasena,
+                preferencias = listOf("Restaurantes", "Parques", "Museos", "Librería") // Preferencias predeterminadas
+            )
+
             registerUser(request)
         }
-    }
-
-    private fun showTermsDialog() {
-        val termsText = getString(R.string.terms_conditions)
-        AlertDialog.Builder(this)
-            .setTitle("Términos y Condiciones")
-            .setMessage(termsText)
-            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-            .show()
     }
 
     private fun registerUser(request: RegisterRequest) {

@@ -1,20 +1,11 @@
 package com.example.travelillay.data.network
 
-import com.example.travelillay.models.ItinerarioRequest
-import com.example.travelillay.models.ItinerarioResponse
 import com.example.travelillay.models.*
-import com.example.travelillay.models.UserBasicInfo
-import com.example.travelillay.models.Preferencias
-
-import com.example.travelillay.models.Actividad
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.GET
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface ApiService {
+
     @POST("api/users/register")
     fun registerUser(@Body request: RegisterRequest): Call<RegisterResponse>
 
@@ -22,22 +13,19 @@ interface ApiService {
     fun loginUser(@Body request: LoginRequest): Call<LoginResponse>
 
     @GET("api/users/user/{id}")
-    fun getUserBasicInfo(@Path("id") userId: Int): Call<UserBasicInfo>
+    fun getUserBasicInfo(@Path("id") userId: Int): Call<GetUserResponse>
 
     @GET("api/users/user/{id}/preferences")
     fun getUserPreferences(@Path("id") userId: Int): Call<Preferencias>
 
     @PUT("api/users/update")
-    fun updateUser(@Body user: UserBasicInfo): Call<Void>
+    fun updateUser(@Body user: UpdateUserRequest): Call<Void>
 
-    @POST("/api/itinerario/manual")
-    fun guardarItinerario(@Body itinerarioRequest: ItinerarioRequest): Call<ItinerarioResponse>
 
-    @GET("api/actividades/obtener")
-    fun obtenerActividades(): Call<List<Actividad>>
+    @PUT("api/users/update/schedule/{id}")
+    fun updateUserSchedule(@Path("id") userId: Int, @Body schedule: Map<String, String>): Call<Void>
 
-    @GET("api/itinerario/usuario/{usuarioId}")
-    fun obtenerItinerariosPorUsuario(@Path("usuarioId") usuarioId: Int): Call<List<ItinerarioResponse>>
-
+    @PUT("api/users/update/activities/{id}")
+    fun updateUserActivities(@Path("id") userId: Int, @Body activities: List<Actividad>): Call<Void>
 
 }

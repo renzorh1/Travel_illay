@@ -1,14 +1,12 @@
 package com.example.travelillay.models
 
 data class RegisterRequest(
-    val Nombre: String,
-    val Celular: String, // Cambiar de NumeroCelular a Celular
-    val Correo: String,
-    val Contrasena: String,
-    val Preferencias: Preferencias? = null // Mantener Preferencias en caso se necesite
+    val nombre: String,
+    val numero_celular: String,  // Cambia 'celular' por 'numero_celular'
+    val correo: String,
+    val contrasena: String,
+    val preferencias: List<String> // Asegúrate de que este campo sea esperado en tu backend
 )
-
-
 data class RegisterResponse(
     val message: String,
     val newUser: RegisteredUser
@@ -16,9 +14,9 @@ data class RegisterResponse(
 
 data class RegisteredUser(
     val id: Int,
-    val Nombre: String,
-    val Celular: String,
-    val Correo: String,
-    val Contrasena: String,
-    val Preferencias: Preferencias? = null // Mantener para recibir la respuesta con Preferencias
+    val nombre: String,
+    val numero_celular: String,
+    val correo: String,
+    val idioma_preferencia: String,  // Añadido para reflejar el valor predeterminado
+    val actividades_favoritas: List<String>  // Añadido para reflejar el valor predeterminado
 )

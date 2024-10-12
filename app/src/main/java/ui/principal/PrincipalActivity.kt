@@ -2,21 +2,13 @@ package ui.principal
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
-import android.widget.PopupWindow
-import androidx.core.content.ContextCompat
+import android.widget.LinearLayout
 import com.example.travelillay.R
 import ui.base.BaseActivity
-import ui.configuration.ConfigurationActivity
-import ui.itinerarios.OpcionesItinerario
 import ui.main.MainActivity
 import ui.profile.PerfilActivity
-import android.widget.LinearLayout
+import ui.configuration.ConfigurationActivity
 
 class PrincipalActivity : BaseActivity() {
 
@@ -26,59 +18,32 @@ class PrincipalActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.principal_activity)
 
-        // Botón Explorar
-        val explorarButton = findViewById<Button>(R.id.explorarButton)
-        explorarButton.setOnClickListener {
-            // Intent para navegar a la actividad de selección de itinerario
-            val intent = Intent(this, OpcionesItinerario::class.java)
-            startActivity(intent)
-        }
-
-        // Botón Crear
-        val crearButton = findViewById<LinearLayout>(R.id.crearButton)
-        crearButton.setOnClickListener {
-            // Intent para navegar a OpcionesItinerario
-            val intent = Intent(this, OpcionesItinerario::class.java)
-            startActivity(intent)
-        }
-
-        userId = getUserIdFromSharedPreferences()
-
-        if (userId == null) {
+        userId = getUserIdFromSharedPreferences() ?: run {
             showToast("Error: ID de usuario no encontrado")
+            finish()
             return
         }
 
-        findViewById<ImageButton>(R.id.menuButton).setOnClickListener { v ->
-            showPopupMenu(v)
-        }
-    }
-
-    private fun showPopupMenu(anchorView: View) {
-        val popupView = LayoutInflater.from(this).inflate(R.layout.menu_layout, null)
-        val popupWindow = PopupWindow(
-            popupView,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            true
-        )
-
-        popupView.findViewById<View>(R.id.menuPerfil).setOnClickListener {
-            startActivity(Intent(this, PerfilActivity::class.java))
-            popupWindow.dismiss()
+        // Configura el botón de menú
+        val menuButton = findViewById<ImageButton>(R.id.menuButton)
+        menuButton?.setOnClickListener { v ->
+            showPopupMenu(v, {
+                startActivity(Intent(this, PerfilActivity::class.java))
+            }, {
+                handleLogout()
+            }, {
+                startActivity(Intent(this, ConfigurationActivity::class.java)) // Redirige a Configuración
+            })
+        } ?: run {
+            showToast("Error: menuButton no encontrado")
         }
 
-        popupView.findViewById<View>(R.id.menuConfiguracion).setOnClickListener {
-            startActivity(Intent(this, ConfigurationActivity::class.java))
-            popupWindow.dismiss()
+        // Configura el botón de inicio
+        val inicioButton = findViewById<LinearLayout>(R.id.inicioButton)
+        inicioButton.setOnClickListener {
+            startActivity(Intent(this, PrincipalActivity::class.java))
+            finish() // Opcional: cerrar la actividad actual si deseas
         }
-
-        popupView.findViewById<View>(R.id.menuCerrarSesion).setOnClickListener {
-            handleLogout()
-            popupWindow.dismiss()
-        }
-
-        popupWindow.showAsDropDown(anchorView, 0, 0, Gravity.END)
     }
 
     private fun handleLogout() {
@@ -91,9 +56,5 @@ class PrincipalActivity : BaseActivity() {
     private fun getUserIdFromSharedPreferences(): Int? {
         val userId = getSharedPreferences("TravelIllayPrefs", MODE_PRIVATE).getInt("userId", -1)
         return if (userId == -1) null else userId
-    }
-
-    override fun showToast(message: String) {
-        super.showToast(message)
     }
 }

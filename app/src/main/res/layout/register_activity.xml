@@ -20,8 +20,7 @@
         android:layout_gravity="left"
         android:layout_marginTop="24dp"
         android:layout_marginBottom="24dp"
-        android:text="!ÚNETE A
- TRAVEL ILLAY !"
+        android:text="!ÚNETE A TRAVEL ILLAY !"
         android:textColor="#F45A5A"
         android:textSize="32dp"
         android:textStyle="bold" />
@@ -102,10 +101,10 @@
         android:id="@+id/btnRegistrarse"
         android:layout_width="354dp"
         android:layout_height="56dp"
-        android:text="Registrar"
-        android:textSize="24dp"
-        android:textColor="@android:color/white"
         android:background="@drawable/edit_buttom_border"
-        android:textAllCaps="false" />
+        android:text="Registrar"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="24dp" />
 
 </LinearLayout>
