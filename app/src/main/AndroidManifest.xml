@@ -55,7 +55,9 @@
 
         <activity android:name="ui.itinerarios.manual.ItinerarioManual" />
 
-
+        <activity
+            android:name="ui.itinerarios.manual.MainActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

@@ -82,5 +82,13 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.2.1")
     implementation("androidx.appcompat:appcompat:1.3.12")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
+    implementation ("com.android.volley:volley:1.2.1")
+    implementation ("com.google.code.gson:gson:2.8.9")
+
+    implementation ("androidx.appcompat:appcompat:1.3.1")
+    implementation ("androidx.recyclerview:recyclerview:1.2.1")
+
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+
 }
 

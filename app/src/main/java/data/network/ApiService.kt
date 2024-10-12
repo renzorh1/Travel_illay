@@ -3,6 +3,7 @@ package com.example.travelillay.data.network
 import com.example.travelillay.models.*
 import retrofit2.Call
 import retrofit2.http.*
+import retrofit2.http.GET
 
 interface ApiService {
 
@@ -30,5 +31,8 @@ interface ApiService {
 
     @POST("api/itinerarios/crear")
     fun crearItinerario(@Body itinerario: Itinerario): Call<Itinerario>
+
+    @GET("api/actividades/obtener")
+    fun obtenerActividades(): Call<List<Actividad1>>
 
 }

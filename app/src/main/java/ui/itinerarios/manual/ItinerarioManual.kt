@@ -68,14 +68,11 @@ class ItinerarioManual : AppCompatActivity() {
             }
 
             val itinerario = Itinerario(
-                usuario_id = 1,
+                usuario_id = usuarioId,
                 nombre = itinerarioNombre,
-                fecha_creacion = "", // Este campo puede ser manejado en el backend
+                fecha_creacion = "",
                 es_activo = true
             )
-
-            // Imprimir los valores antes de enviar
-            println("Enviando Itinerario: $itinerario")
 
             val apiService = RetrofitClient.create(ApiService::class.java)
             val call = apiService.crearItinerario(itinerario)
@@ -87,7 +84,9 @@ class ItinerarioManual : AppCompatActivity() {
                 ) {
                     if (response.isSuccessful) {
                         Toast.makeText(this@ItinerarioManual, "Itinerario guardado con éxito", Toast.LENGTH_SHORT).show()
-                        // Aquí se debería manejar la navegación o cualquier otro paso siguiente
+                        val intent = Intent(this@ItinerarioManual, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
                     } else {
                         val errorBody = response.errorBody()?.string()
                         println("Error en el servidor: $errorBody")
