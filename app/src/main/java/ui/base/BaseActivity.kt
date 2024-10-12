@@ -20,7 +20,7 @@ open class BaseActivity : AppCompatActivity() {
         anchorView: View,
         onProfileClick: () -> Unit,
         onLogoutClick: () -> Unit,
-        onConfiguracionClick: () -> Unit // Agregar este nuevo parámetro
+        onConfiguracionClick: () -> Unit
     ) {
         val inflater = LayoutInflater.from(this)
         val menuLayout = inflater.inflate(R.layout.menu_layout, null)
