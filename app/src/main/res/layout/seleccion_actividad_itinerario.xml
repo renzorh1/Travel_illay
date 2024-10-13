@@ -15,6 +15,14 @@
         android:src="@drawable/opciones1"
         android:contentDescription="Imagen de fondo" />
 
+    <!-- Encabezado -->
+    <include
+        layout="@layout/header_layout"
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <!-- Título -->
     <TextView
         android:id="@+id/titleText"
@@ -24,10 +32,10 @@
         android:textColor="#FFFFFF"
         android:textSize="28sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="60dp" />
+        android:layout_marginTop="20dp" />
 
     <!-- Botón: Quiero crear mi ruta -->
     <Button
@@ -71,102 +79,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp" />
 
-    <LinearLayout
+    <!-- Barra de Navegación Inferior -->
+    <include
+        layout="@layout/bottom_navigation"
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#FFFFFF"
-        android:padding="16dp"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-        <!-- Botón Inicio -->
-        <LinearLayout
-            android:id="@+id/inicioButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:contentDescription="Inicio"
-                android:src="@drawable/ic_home" /> <!-- Asegúrate de que este archivo esté en drawable -->
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Inicio"
-                android:textColor="#000000" />
-        </LinearLayout>
-
-        <!-- Botón Crear -->
-        <LinearLayout
-            android:id="@+id/crearButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:contentDescription="Crear"
-                android:src="@drawable/ic_create" /> <!-- Asegúrate de que este archivo esté en drawable -->
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Crear"
-                android:textColor="#000000" />
-        </LinearLayout>
-
-        <!-- Botón Mapa -->
-        <LinearLayout
-            android:id="@+id/mapaButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:contentDescription="Mapa"
-                android:src="@drawable/ic_map" /> <!-- Asegúrate de que este archivo esté en drawable -->
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mapa"
-                android:textColor="#000000" />
-        </LinearLayout>
-
-        <!-- Botón Itinerarios -->
-        <LinearLayout
-            android:id="@+id/itinerariosButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:contentDescription="Itinerarios"
-                android:src="@drawable/ic_itinerary" /> <!-- Asegúrate de que este archivo esté en drawable -->
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Itinerarios"
-                android:textColor="#000000" />
-        </LinearLayout>
-
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

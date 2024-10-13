@@ -1,4 +1,4 @@
-package com.example.travelillay.models
+package models.preferences
 
 data class PreferenciasRequest(
     val actividades_favoritas: List<String>,

@@ -7,10 +7,17 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.travelillay.R
-import com.example.travelillay.models.Actividad1
+import models.itineraries.Actividad
 
-class ActividadAdapter(private var actividades: List<Actividad1>) :
+class ActividadAdapter(private var actividades: List<Actividad>) :
     RecyclerView.Adapter<ActividadAdapter.ActividadViewHolder>() {
+
+    private var onActividadClickListener: OnActividadClickListener? = null
+
+    // Método para establecer el listener
+    fun setOnActividadClickListener(listener: OnActividadClickListener) {
+        this.onActividadClickListener = listener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActividadViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -21,11 +28,16 @@ class ActividadAdapter(private var actividades: List<Actividad1>) :
     override fun onBindViewHolder(holder: ActividadViewHolder, position: Int) {
         val actividad = actividades[position]
         holder.bind(actividad)
+
+        // Configurar el clic en el elemento de la vista
+        holder.itemView.setOnClickListener {
+            onActividadClickListener?.onActividadClick(actividad)
+        }
     }
 
     override fun getItemCount(): Int = actividades.size
 
-    fun actualizarActividades(nuevasActividades: List<Actividad1>) {
+    fun actualizarActividades(nuevasActividades: List<Actividad>) {
         actividades = nuevasActividades
         notifyDataSetChanged()
     }
@@ -36,7 +48,7 @@ class ActividadAdapter(private var actividades: List<Actividad1>) :
         private val calificacionTextView: TextView = itemView.findViewById(R.id.calificacionTextView)
         private val lugarTextView: TextView = itemView.findViewById(R.id.lugarTextView)
 
-        fun bind(actividad: Actividad1) {
+        fun bind(actividad: Actividad) {
             Log.d("ActividadAdapter", "Nombre: ${actividad.Nombre}, Tipo: ${actividad.Tipo}, Calificación: ${actividad.Calificacion}, Lugar: ${actividad.Lugar}")
             nombreTextView.text = actividad.Nombre
             tipoTextView.text = actividad.Tipo

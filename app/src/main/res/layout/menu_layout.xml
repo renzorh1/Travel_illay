@@ -65,27 +65,9 @@ android:backgroundTint="@android:color/white">
     android:textColor="@android:color/black"/>
 </androidx.cardview.widget.CardView>
 
-<TextView
-android:id="@+id/menuTerminos"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:drawableStart="@drawable/ic_terms"
-android:drawablePadding="16dp"
-android:padding="8dp"
-android:text="Términos y condiciones"
-android:textSize="16sp"
-android:textColor="@android:color/black"/>
 
-<TextView
-android:id="@+id/menuPrivacidad"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:drawableStart="@drawable/ic_privacy"
-android:drawablePadding="16dp"
-android:padding="8dp"
-android:text="Política de privacidad"
-android:textSize="16sp"
-android:textColor="@android:color/black"/>
+
+
 
 <TextView
 android:id="@+id/menuCerrarSesion"

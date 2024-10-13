@@ -23,7 +23,7 @@ class PrincipalActivity : BaseActivity() {
         // Botón Explorar
         val explorarButton = findViewById<Button>(R.id.explorarButton)
         explorarButton.setOnClickListener {
-            // Intent para navegar a la actividad de selección de itinerario
+            // Navegar a la actividad de selección de itinerario
             val intent = Intent(this, OpcionesItinerario::class.java)
             startActivity(intent)
         }
@@ -31,7 +31,7 @@ class PrincipalActivity : BaseActivity() {
         // Botón Crear
         val crearButton = findViewById<LinearLayout>(R.id.crearButton)
         crearButton.setOnClickListener {
-            // Intent para navegar a OpcionesItinerario
+            // Navegar a OpcionesItinerario
             val intent = Intent(this, OpcionesItinerario::class.java)
             startActivity(intent)
         }
@@ -42,7 +42,7 @@ class PrincipalActivity : BaseActivity() {
             return
         }
 
-        // Configura el botón de menú
+        // Configuración del botón de menú utilizando lógica común en BaseActivity
         val menuButton = findViewById<ImageButton>(R.id.menuButton)
         menuButton?.setOnClickListener { v ->
             showPopupMenu(v, {
@@ -50,17 +50,17 @@ class PrincipalActivity : BaseActivity() {
             }, {
                 handleLogout()
             }, {
-                startActivity(Intent(this, ConfigurationActivity::class.java)) // Redirige a Configuración
+                startActivity(Intent(this, ConfigurationActivity::class.java)) // Redirigir a Configuración
             })
         } ?: run {
             showToast("Error: menuButton no encontrado")
         }
 
-        // Configura el botón de inicio
+        // Configuración del botón de inicio utilizando lógica común en BaseActivity
         val inicioButton = findViewById<LinearLayout>(R.id.inicioButton)
         inicioButton.setOnClickListener {
             startActivity(Intent(this, PrincipalActivity::class.java))
-            finish() // Opcional: cerrar la actividad actual si deseas
+            finish() // Cierra la actividad actual si es necesario
         }
     }
 

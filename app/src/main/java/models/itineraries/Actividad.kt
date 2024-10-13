@@ -1,6 +1,6 @@
-package com.example.travelillay.models
+package models.itineraries
 
-data class Actividad1(
+data class Actividad(
     val Nombre: String,
     val Tipo: String,
     val Lugar: String,

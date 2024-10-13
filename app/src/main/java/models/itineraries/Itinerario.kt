@@ -1,4 +1,4 @@
-package com.example.travelillay.models
+package models.itineraries
 
 data class Itinerario(
     val usuario_id: Int,

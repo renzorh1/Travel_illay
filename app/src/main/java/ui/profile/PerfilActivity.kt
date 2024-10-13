@@ -1,4 +1,3 @@
-// PerfilActivity.kt
 package ui.profile
 
 import android.content.Intent
@@ -12,9 +11,9 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.example.travelillay.R
 import com.example.travelillay.data.network.RetrofitClient
-import com.example.travelillay.models.GetUserResponse
-import com.example.travelillay.models.Preferencias
-import com.example.travelillay.models.UpdateUserRequest
+import models.auth.responses.GetUserResponse
+import models.auth.requests.UpdateUserRequest
+import models.preferences.Preferencias
 import ui.base.BaseActivity
 import ui.main.MainActivity
 import ui.principal.PrincipalActivity
@@ -23,7 +22,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ui.configuration.ConfigurationActivity
-
 
 class PerfilActivity : BaseActivity() {
 
@@ -54,7 +52,6 @@ class PerfilActivity : BaseActivity() {
 
         // Observa los datos del usuario en el ViewModel
         perfilViewModel.userData.observe(this, Observer { user ->
-            // Actualiza la UI con los datos del usuario
             user?.let {
                 nombreEditText.setText(it.nombre)
                 correoEditText.setText(it.correo)
@@ -63,7 +60,7 @@ class PerfilActivity : BaseActivity() {
             }
         })
 
-        // Configura el botón de inicio
+        // Configuración del botón de inicio usando lógica común
         val inicioButton = findViewById<LinearLayout>(R.id.inicioButton)
         inicioButton.setOnClickListener {
             startActivity(Intent(this, PrincipalActivity::class.java))
@@ -80,7 +77,6 @@ class PerfilActivity : BaseActivity() {
     }
 
     private fun setupListeners() {
-        // Manejar el botón de menú
         val menuButton = findViewById<ImageButton>(R.id.menuButton)
         menuButton?.setOnClickListener { v ->
             showPopupMenu(v, {
@@ -112,12 +108,7 @@ class PerfilActivity : BaseActivity() {
     private fun getUserIdFromSharedPreferences(): Int? {
         val userId = getSharedPreferences("TravelIllayPrefs", MODE_PRIVATE).getInt("userId", -1)
         Log.d("PerfilActivity", "User ID retrieved: $userId")
-        return if (userId <= 0) {
-            Log.d("PerfilActivity", "ID de usuario no válida")
-            null
-        } else {
-            userId
-        }
+        return if (userId <= 0) null else userId
     }
 
     private fun getUserBasicInfo() {
@@ -148,7 +139,6 @@ class PerfilActivity : BaseActivity() {
                 if (response.isSuccessful) {
                     response.body()?.let { preferencias ->
                         Log.d("PerfilActivity", "Preferencias: $preferencias")
-                        // Aquí puedes actualizar la UI con las preferencias si lo deseas
                     } ?: showToast("Respuesta vacía del servidor")
                 } else {
                     showToast("Error al obtener preferencias del usuario: Código ${response.code()}")
@@ -192,18 +182,10 @@ class PerfilActivity : BaseActivity() {
 
     private fun validateInputs(): Boolean {
         return when {
-            nombreEditText.text.isEmpty() -> {
-                false
-            }
-            contrasenaEditText.text.isEmpty() -> {
-                false
-            }
-            correoEditText.text.isEmpty() -> {
-                false
-            }
-            telefonoEditText.text.isEmpty() -> {
-                false
-            }
+            nombreEditText.text.isEmpty() -> false
+            contrasenaEditText.text.isEmpty() -> false
+            correoEditText.text.isEmpty() -> false
+            telefonoEditText.text.isEmpty() -> false
             else -> true
         }
     }

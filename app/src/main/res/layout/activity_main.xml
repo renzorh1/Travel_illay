@@ -1,79 +1,49 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
+    <!-- Encabezado -->
+    <include
+        layout="@layout/header_layout"
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- Campo de Búsqueda -->
     <EditText
         android:id="@+id/searchEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Buscar Actividades"
         android:padding="16dp"
-        android:imeOptions="actionDone" />
+        android:imeOptions="actionDone"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout" />
 
+    <!-- Spinner de Tipos -->
     <Spinner
         android:id="@+id/tipoSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp" />
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/searchEditText" />
 
+    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp" />
+        android:layout_height="0dp"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tipoSpinner"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation" />
 
-    <LinearLayout
+    <!-- Barra de Navegación Inferior -->
+    <include
+        layout="@layout/bottom_navigation"
+        android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_home" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Inicio" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_create" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Crear" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_map" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mapa" />
-        </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

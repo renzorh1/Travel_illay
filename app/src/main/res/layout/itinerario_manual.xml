@@ -6,20 +6,26 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
+    <!-- Encabezado -->
+    <include
+        layout="@layout/header_layout"
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <!-- Título de la Pantalla -->
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:text="Itinerario Manual"
         android:textColor="#000000"
         android:textSize="28sp"
         android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/mapImage"
@@ -79,86 +85,22 @@
             android:contentDescription="Editar nombre" />
     </LinearLayout>
 
-    <!-- Botón Siguiente -->
+    <!-- Botón de Guardar -->
+
     <Button
         android:id="@+id/nextButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="#000000"
-        android:text="Siguiente"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="168dp"
+        android:text="Guardar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.6" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nameFieldTitle"
+        app:layout_constraintWidth_percent="0.8" />
 
-    <!-- Barra de Navegación Inferior -->
-    <LinearLayout
-        android:id="@+id/bottomNavigation"
+    <include
+        layout="@layout/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#FFFFFF"
-        android:padding="16dp"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <!-- Botón de Inicio -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_home"
-                android:contentDescription="Inicio" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Inicio"
-                android:textColor="#000000" />
-        </LinearLayout>
-
-        <!-- Botón Crear -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_create"
-                android:contentDescription="Crear" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Crear"
-                android:textColor="#000000" />
-        </LinearLayout>
-
-        <!-- Botón Mapa -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_map"
-                android:contentDescription="Mapa" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mapa"
-                android:textColor="#000000" />
-        </LinearLayout>
-    </LinearLayout>
-
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

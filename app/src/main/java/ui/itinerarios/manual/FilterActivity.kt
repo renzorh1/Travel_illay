@@ -10,32 +10,33 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.travelillay.R
 import com.example.travelillay.data.network.RetrofitClient
-import com.example.travelillay.models.Actividad1
+import models.itineraries.Actividad
 import com.example.travelillay.ui.ActividadAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.util.Log
-import android.text.Editable
-import android.text.TextWatcher
 import com.example.travelillay.data.network.ApiService
+import ui.base.BaseActivity
 
-class MainActivity : AppCompatActivity() {
+class FilterActivity : BaseActivity() { // Heredamos de BaseActivity para reutilizar el menú y la navegación
 
     private lateinit var actividadAdapter: ActividadAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchEditText: EditText
     private lateinit var tipoSpinner: Spinner
-    private var actividadesList: List<Actividad1> = emptyList()
+    private var actividadesList: List<Actividad> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Usar setupMenu() de BaseActivity para configurar el menú común
+        setupMenu()
 
         recyclerView = findViewById(R.id.recyclerView)
         searchEditText = findViewById(R.id.searchEditText)
@@ -77,20 +78,20 @@ class MainActivity : AppCompatActivity() {
         val apiService = RetrofitClient.create(ApiService::class.java)
         val call = apiService.obtenerActividades()
 
-        call.enqueue(object : Callback<List<Actividad1>> {
-            override fun onResponse(call: Call<List<Actividad1>>, response: Response<List<Actividad1>>) {
+        call.enqueue(object : Callback<List<Actividad>> {
+            override fun onResponse(call: Call<List<Actividad>>, response: Response<List<Actividad>>) {
                 if (response.isSuccessful) {
                     actividadesList = response.body() ?: emptyList()
                     actividadAdapter.actualizarActividades(actividadesList)
                 } else {
                     Log.e("API Error", "Error al cargar actividades: ${response.errorBody()?.string()}")
-                    Toast.makeText(this@MainActivity, "Error al cargar actividades", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@FilterActivity, "Error al cargar actividades", Toast.LENGTH_SHORT).show()
                 }
             }
 
-            override fun onFailure(call: Call<List<Actividad1>>, t: Throwable) {
+            override fun onFailure(call: Call<List<Actividad>>, t: Throwable) {
                 Log.e("API Error", "Error de conexión: ${t.message}")
-                Toast.makeText(this@MainActivity, "Error de conexión", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@FilterActivity, "Error de conexión", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -108,5 +109,3 @@ class MainActivity : AppCompatActivity() {
         view.clearFocus()
     }
 }
-
-
