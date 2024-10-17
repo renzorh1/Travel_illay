@@ -1,8 +1,9 @@
 package models.itineraries
 
 data class Actividad(
-    val Nombre: String,
-    val Tipo: String,
-    val Lugar: String,
-    val Calificacion: Double
+    val name: String, // Cambié 'nombre' a 'name'
+    val rating: Double?,
+    val type: String,
+    val lat: Double,
+    val lng: Double
 )

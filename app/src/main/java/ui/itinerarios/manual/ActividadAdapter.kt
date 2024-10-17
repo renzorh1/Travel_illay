@@ -14,7 +14,6 @@ class ActividadAdapter(private var actividades: List<Actividad>) :
 
     private var onActividadClickListener: OnActividadClickListener? = null
 
-    // Método para establecer el listener
     fun setOnActividadClickListener(listener: OnActividadClickListener) {
         this.onActividadClickListener = listener
     }
@@ -29,7 +28,6 @@ class ActividadAdapter(private var actividades: List<Actividad>) :
         val actividad = actividades[position]
         holder.bind(actividad)
 
-        // Configurar el clic en el elemento de la vista
         holder.itemView.setOnClickListener {
             onActividadClickListener?.onActividadClick(actividad)
         }
@@ -45,15 +43,16 @@ class ActividadAdapter(private var actividades: List<Actividad>) :
     class ActividadViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nombreTextView: TextView = itemView.findViewById(R.id.nombreTextView)
         private val tipoTextView: TextView = itemView.findViewById(R.id.tipoTextView)
-        private val calificacionTextView: TextView = itemView.findViewById(R.id.calificacionTextView)
-        private val lugarTextView: TextView = itemView.findViewById(R.id.lugarTextView)
+        private val ratingTextView: TextView = itemView.findViewById(R.id.calificacionTextView)
 
         fun bind(actividad: Actividad) {
-            Log.d("ActividadAdapter", "Nombre: ${actividad.Nombre}, Tipo: ${actividad.Tipo}, Calificación: ${actividad.Calificacion}, Lugar: ${actividad.Lugar}")
-            nombreTextView.text = actividad.Nombre
-            tipoTextView.text = actividad.Tipo
-            calificacionTextView.text = actividad.Calificacion.toString()
-            lugarTextView.text = actividad.Lugar
+            Log.d("ActividadAdapter", "Nombre: ${actividad.name}, Tipo: ${actividad.type}, Calificación: ${actividad.rating}")
+            nombreTextView.text = actividad.name.takeIf { it.isNotEmpty() } ?: "Sin Nombre"
+            tipoTextView.text = actividad.type?.takeIf { it.isNotEmpty() } ?: "Sin Tipo"
+            ratingTextView.text = actividad.rating?.toString() ?: "N/A"
         }
     }
+
+
+
 }

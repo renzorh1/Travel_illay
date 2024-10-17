@@ -36,14 +36,22 @@
         android:layout_height="0dp"
         android:padding="16dp"
         app:layout_constraintTop_toBottomOf="@id/tipoSpinner"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation" />
+        app:layout_constraintBottom_toTopOf="@id/progressBar"
+        app:layout_constraintVertical_bias="0" />
 
-    <!-- Barra de Navegación Inferior -->
-    <include
-        layout="@layout/bottom_navigation"
-        android:id="@+id/bottomNavigation"
-        android:layout_width="match_parent"
+    <!-- ProgressBar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Bottom Navigation -->
+    <include layout="@layout/bottom_navigation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

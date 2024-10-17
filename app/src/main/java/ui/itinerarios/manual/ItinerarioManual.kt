@@ -46,6 +46,7 @@ class ItinerarioManual : BaseActivity() {
             }
         }
 
+
         itinerarioEditText.setOnClickListener {
             itinerarioEditText.requestFocus()
             itinerarioEditText.isFocusableInTouchMode = true
@@ -71,7 +72,7 @@ class ItinerarioManual : BaseActivity() {
     }
 
     private fun crearItinerario(itinerario: Itinerario) {
-        val apiService = RetrofitClient.create(ApiService::class.java)
+        val apiService = RetrofitClient.createService(ApiService::class.java)
         apiService.crearItinerario(itinerario).enqueue(object : Callback<Itinerario> {
             override fun onResponse(call: Call<Itinerario>, response: Response<Itinerario>) {
                 if (response.isSuccessful) {

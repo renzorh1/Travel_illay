@@ -32,6 +32,6 @@ interface ApiService {
     @POST("api/itinerarios/crear")
     fun crearItinerario(@Body itinerario: Itinerario): Call<Itinerario>
 
-    @GET("api/actividades/obtener")
-    fun obtenerActividades(): Call<List<Actividad>>
+    @GET("api/googlePlaces/nearby")
+    fun getNearbyPlaces(): Call<List<Actividad>> // Asegúrate de que la estructura de Actividad esté alineada con la respuesta de la API
 }
