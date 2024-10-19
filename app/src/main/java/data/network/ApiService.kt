@@ -33,5 +33,12 @@ interface ApiService {
     fun crearItinerario(@Body itinerario: Itinerario): Call<Itinerario>
 
     @GET("api/googlePlaces/nearby")
-    fun getNearbyPlaces(): Call<List<Actividad>> // Asegúrate de que la estructura de Actividad esté alineada con la respuesta de la API
+    fun getNearbyPlaces(): Call<List<Actividad>>
+
+    @GET("api/googlePlaces/places")
+    fun getNearbyPlaces(@Query("types") types: String): Call<List<Actividad>>
+
+    // Actualiza el método para eliminar el último itinerario de un usuario
+    @DELETE("api/itinerarios/eliminar/{usuario_id}")
+    fun eliminarUltimoItinerario(@Path("usuario_id") usuarioId: Int): Call<Void>
 }

@@ -14,18 +14,18 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.travelillay.R
-import com.example.travelillay.data.network.RetrofitClient
 import models.itineraries.Actividad
 import com.example.travelillay.ui.ActividadAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.util.Log
-import com.example.travelillay.data.network.ApiService
+import com.example.travelillay.data.network.RetrofitClient
 import ui.base.BaseActivity
 
 class FilterActivity : BaseActivity() {
 
+    private var itinerarioId: Int = -1 // Variable para almacenar el ID del itinerario
     private lateinit var actividadAdapter: ActividadAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchEditText: EditText
@@ -37,29 +37,46 @@ class FilterActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Inicializar el ID del itinerario
+        itinerarioId = intent.getIntExtra("itinerarioId", -1)
+
         setupMenu()
 
+        // Inicializar vistas
         recyclerView = findViewById(R.id.recyclerView)
         searchEditText = findViewById(R.id.searchEditText)
         tipoSpinner = findViewById(R.id.tipoSpinner)
         progressBar = findViewById(R.id.progressBar)
 
+        // Configurar RecyclerView y Adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         actividadAdapter = ActividadAdapter(emptyList())
         recyclerView.adapter = actividadAdapter
 
         configurarSpinner()
-        cargarLugaresCercanos()
+        cargarLugaresCercanos("Todos")
 
+        // Configurar búsqueda
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                ocultarTeclado(searchEditText)
+                ocultarTeclado()
                 aplicarFiltros(searchEditText.text.toString(), tipoSpinner.selectedItem.toString())
                 true
             } else {
                 false
             }
         }
+    }
+
+    // Manejamos el evento de retroceso para mostrar el cuadro de diálogo de confirmación
+    override fun onBackPressed() {
+        showConfirmationDialog(
+            message = "¿Estás seguro de que quieres salir? Se eliminará el itinerario creado.",
+            positiveAction = {
+                eliminarUltimoItinerario(itinerarioId) // Acción si el usuario confirma
+            },
+            negativeAction = { super.onBackPressed() } // Asegúrate de que se llama a super si se elige "No"
+        )
     }
 
     private fun configurarSpinner() {
@@ -70,63 +87,59 @@ class FilterActivity : BaseActivity() {
 
         tipoSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                aplicarFiltros(searchEditText.text.toString(), tipos[position])
+                cargarLugaresCercanos(tipos[position])
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
     }
 
-    private fun cargarLugaresCercanos() {
+    private fun cargarLugaresCercanos(tipo: String) {
         progressBar.visibility = View.VISIBLE // Muestra la barra de progreso
 
         val apiService = RetrofitClient.apiService // Usa el apiService ya definido
-        val call = apiService.getNearbyPlaces()
+        val typeQuery = if (tipo == "Todos") "" else tipo // Si selecciona 'Todos', no aplicamos filtro de tipo
+        val call = apiService.getNearbyPlaces(typeQuery)
 
         call.enqueue(object : Callback<List<Actividad>> {
             override fun onResponse(call: Call<List<Actividad>>, response: Response<List<Actividad>>) {
                 progressBar.visibility = View.GONE
-
                 if (response.isSuccessful) {
-                    val actividades = response.body() ?: emptyList()
-                    Log.d("FilterActivity", "Actividades recibidas: $actividades") // Log de verificación
-                    actividadesList = actividades.map { actividad ->
-                        Actividad(
-                            name = actividad.name, // Cambié 'nombre' a 'name'
-                            rating = actividad.rating,
-                            type = actividad.type ?: "Sin Tipo",
-                            lat = actividad.lat,
-                            lng = actividad.lng
-                        )
+                    response.body()?.let { actividades ->
+                        Log.d("FilterActivity", "Actividades recibidas: $actividades") // Log de verificación
+                        actividadesList = actividades
+                        actividadAdapter.actualizarActividades(actividadesList)
+                    } ?: run {
+                        mostrarError("No se encontraron actividades.")
                     }
-                    actividadAdapter.actualizarActividades(actividadesList)
                 } else {
-                    Log.e("API Error", "Error al cargar actividades: ${response.errorBody()?.string()}")
-                    Toast.makeText(this@FilterActivity, "Error al cargar actividades", Toast.LENGTH_SHORT).show()
+                    mostrarError("Error al cargar actividades: ${response.errorBody()?.string()}")
                 }
             }
 
             override fun onFailure(call: Call<List<Actividad>>, t: Throwable) {
                 progressBar.visibility = View.GONE
-                Log.e("API Error", "Error de conexión: ${t.message}")
-                Toast.makeText(this@FilterActivity, "Error de conexión", Toast.LENGTH_SHORT).show()
+                mostrarError("Error de conexión: ${t.message}")
             }
         })
     }
 
-
-
     private fun aplicarFiltros(nombre: String, tipo: String) {
-        val listaFiltrada = actividadesList.filter {
-            it.name.contains(nombre, ignoreCase = true) &&
-                    (tipo == "Todos" || it.type.equals(tipo, ignoreCase = true))
+        val listaFiltrada = actividadesList.filter { actividad ->
+            actividad.name.contains(nombre, ignoreCase = true) &&
+                    (tipo == "Todos" || actividad.type.equals(tipo, ignoreCase = true))
         }
         actividadAdapter.actualizarActividades(listaFiltrada)
     }
 
-    private fun ocultarTeclado(view: EditText) {
+    private fun ocultarTeclado() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
-        view.clearFocus()
+        imm.hideSoftInputFromWindow(searchEditText.windowToken, 0)
+        searchEditText.clearFocus()
+    }
+
+    private fun mostrarError(mensaje: String) {
+        Log.e("FilterActivity", mensaje)
+        Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
     }
 }

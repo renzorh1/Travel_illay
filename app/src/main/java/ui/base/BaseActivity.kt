@@ -17,12 +17,47 @@ import ui.main.MainActivity
 import ui.principal.PrincipalActivity
 import ui.profile.PerfilActivity
 import ui.configuration.ConfigurationActivity
+import android.app.AlertDialog
+import android.content.DialogInterface
+import android.util.Log
+import com.example.travelillay.data.network.RetrofitClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 open class BaseActivity : AppCompatActivity() {
 
+    // Asume que tienes una variable para almacenar el usuario actual
+    protected var usuarioId: Int = -1 // Cambia esto según tu lógica para obtener el ID del usuario
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupMenu() // Configurar el menú y botones comunes
+        usuarioId = obtenerUsuarioIdSesion() // Obtener el ID del usuario al iniciar
+        setupMenu()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+    }
+
+    // Función genérica para mostrar un cuadro de diálogo de confirmación
+    protected fun showConfirmationDialog(
+        message: String,
+        positiveAction: () -> Unit,
+        negativeAction: () -> Unit = { super.onBackPressed() }
+    ) {
+        Log.d("BaseActivity", "Mostrando diálogo de confirmación: $message")
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage(message)
+            .setPositiveButton("Sí") { dialog, _ ->
+                positiveAction()
+                dialog.dismiss()
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                negativeAction()
+                dialog.dismiss()
+            }
+            .show()
     }
 
     protected open fun showToast(message: String) {
@@ -35,16 +70,27 @@ open class BaseActivity : AppCompatActivity() {
 
         menuButton?.setOnClickListener { v ->
             showPopupMenu(v,
-                { startActivity(Intent(this, PerfilActivity::class.java)) }, // Navegar al perfil
+                { navigateTo(PerfilActivity::class.java) }, // Navegar al perfil
                 { handleLogout() }, // Manejar cierre de sesión
-                { startActivity(Intent(this, ConfigurationActivity::class.java)) } // Redirigir a Configuración
+                { navigateTo(ConfigurationActivity::class.java) } // Redirigir a Configuración
             )
         }
 
         inicioButton?.setOnClickListener {
-            startActivity(Intent(this, PrincipalActivity::class.java))
-            finish() // Opcional: cerrar la actividad actual si deseas
+            navigateTo(PrincipalActivity::class.java) // Navegar al inicio
         }
+    }
+
+    protected fun navigateTo(activityClass: Class<*>, itinerarioId: Int = -1) {
+        showConfirmationDialog(
+            message = "¿Estás seguro de que quieres salir? Se eliminará el último itinerario creado.",
+            positiveAction = {
+                eliminarUltimoItinerario(usuarioId) // Cambia a eliminarUltimoItinerario
+                startActivity(Intent(this, activityClass)) // Navega a la nueva actividad
+                finish() // Opcional: cerrar la actividad actual si se desea
+            },
+            negativeAction = {} // No hacer nada si el usuario elige "No"
+        )
     }
 
     protected fun showPopupMenu(
@@ -89,5 +135,29 @@ open class BaseActivity : AppCompatActivity() {
         showToast("Sesión cerrada")
         startActivity(Intent(this, MainActivity::class.java))
         finish()
+    }
+
+    // Llama a la API para eliminar el último itinerario del usuario
+    protected fun eliminarUltimoItinerario(usuarioId: Int) {
+        val apiService = RetrofitClient.apiService
+        apiService.eliminarUltimoItinerario(usuarioId).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    showToast("Último itinerario eliminado")
+                    finish() // Cierra la actividad después de eliminar
+                } else {
+                    showToast("Error al eliminar itinerario")
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                showToast("Error de conexión: ${t.message}")
+            }
+        })
+    }
+
+    // Método para obtener el ID del usuario de las preferencias compartidas
+    private fun obtenerUsuarioIdSesion(): Int {
+        return getSharedPreferences("TravelIllayPrefs", MODE_PRIVATE).getInt("userId", -1)
     }
 }

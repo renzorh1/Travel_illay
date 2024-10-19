@@ -2,10 +2,12 @@
 <resources>
     <string-array name="tipo_actividades">
         <item>Todos</item>
-        <item>Restaurant</item>
-        <item>Parks</item>
-        <item>Museum</item>
-        <item>Library</item>
+        <item>restaurant</item> <!-- Correspondiente a Restaurante -->
+        <item>park</item> <!-- Correspondiente a Parque -->
+        <item>museum</item> <!-- Correspondiente a Museo -->
+        <item>library</item> <!-- Correspondiente a Librería -->
     </string-array>
+
+
 </resources>
 

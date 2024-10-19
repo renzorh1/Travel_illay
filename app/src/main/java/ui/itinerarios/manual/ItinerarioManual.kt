@@ -5,18 +5,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.Button
-import com.example.travelillay.R
-import com.example.travelillay.data.network.RetrofitClient
-import models.itineraries.Itinerario
-import com.example.travelillay.data.network.ApiService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import com.example.travelillay.R
+import com.example.travelillay.data.network.ApiService
+import com.example.travelillay.data.network.RetrofitClient
+import models.itineraries.Itinerario
 import ui.base.BaseActivity
-
 
 class ItinerarioManual : BaseActivity() {
 
@@ -27,6 +26,13 @@ class ItinerarioManual : BaseActivity() {
         val itinerarioEditText = findViewById<EditText>(R.id.nameEditText)
         val editButton = findViewById<ImageButton>(R.id.editNameButton)
         val siguienteButton = findViewById<Button>(R.id.nextButton)
+
+        // Verificar si el usuario está autenticado
+        if (usuarioId <= 0) {
+            showToast("ID de usuario no válido")
+            finish()
+            return
+        }
 
         setupEditText(itinerarioEditText)
         setupButtons(itinerarioEditText, siguienteButton)
@@ -46,10 +52,8 @@ class ItinerarioManual : BaseActivity() {
             }
         }
 
-
         itinerarioEditText.setOnClickListener {
             itinerarioEditText.requestFocus()
-            itinerarioEditText.isFocusableInTouchMode = true
             mostrarTeclado(itinerarioEditText)
         }
     }
@@ -62,40 +66,42 @@ class ItinerarioManual : BaseActivity() {
                 return@setOnClickListener
             }
 
-            val usuarioId = obtenerUsuarioIdSesion() ?: run {
-                showToast("ID de usuario no válido")
-                return@setOnClickListener
-            }
-
-            crearItinerario(Itinerario(usuario_id = usuarioId, nombre = itinerarioNombre, fecha_creacion = "", es_activo = true))
+            crearItinerario(Itinerario(id = 0, usuario_id = usuarioId, nombre = itinerarioNombre, fecha_creacion = "", es_activo = true))
         }
     }
 
     private fun crearItinerario(itinerario: Itinerario) {
-        val apiService = RetrofitClient.createService(ApiService::class.java)
-        apiService.crearItinerario(itinerario).enqueue(object : Callback<Itinerario> {
+        RetrofitClient.createService(ApiService::class.java).crearItinerario(itinerario).enqueue(object : Callback<Itinerario> {
             override fun onResponse(call: Call<Itinerario>, response: Response<Itinerario>) {
                 if (response.isSuccessful) {
-                    showToast("Itinerario guardado con éxito")
-                    startActivity(Intent(this@ItinerarioManual, FilterActivity::class.java))
-                    finish()
+                    response.body()?.let { nuevoItinerario ->
+                        showToast("Itinerario guardado con éxito")
+                        navigateToFilterActivity(nuevoItinerario.id)
+                    } ?: showToast("Error: No se pudo obtener el itinerario guardado")
                 } else {
-                    val errorBody = response.errorBody()?.string()
-                    println("Error en el servidor: $errorBody")
-                    showToast("Error al guardar itinerario: $errorBody")
+                    mostrarErrorDeServidor(response)
                 }
             }
 
             override fun onFailure(call: Call<Itinerario>, t: Throwable) {
-                println("Error en la conexión: ${t.message}")
                 showToast("Error en la conexión: ${t.message}")
             }
         })
     }
 
-    private fun obtenerUsuarioIdSesion(): Int? {
-        val userId = getSharedPreferences("TravelIllayPrefs", MODE_PRIVATE).getInt("userId", -1)
-        return if (userId <= 0) null else userId
+    private fun mostrarErrorDeServidor(response: Response<Itinerario>) {
+        val errorBody = response.errorBody()?.string() ?: "Error desconocido"
+        println("Error en el servidor: $errorBody")
+        showToast("Error al guardar itinerario: $errorBody")
+    }
+
+    private fun navigateToFilterActivity(itinerarioId: Int) {
+        val intent = Intent(this, FilterActivity::class.java).apply {
+            putExtra("itinerarioId", itinerarioId)
+            putExtra("usuarioId", usuarioId) // Pasa el ID del usuario
+        }
+        startActivity(intent)
+        finish()
     }
 
     private fun ocultarTeclado(view: EditText) {
