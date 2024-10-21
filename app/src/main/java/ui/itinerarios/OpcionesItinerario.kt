@@ -13,7 +13,6 @@ class OpcionesItinerario : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.seleccion_actividad_itinerario)
 
-        // Usar setupMenu() de BaseActivity para configurar el menú común
         setupMenu()
 
         // Referencia al botón "Crear mi ruta"
@@ -24,4 +23,6 @@ class OpcionesItinerario : BaseActivity() {
             startActivity(intent)
         }
     }
+
+    // No activamos la eliminación de itinerario aquí
 }

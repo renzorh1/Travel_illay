@@ -37,14 +37,14 @@ class FilterActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Inicializar el ID del itinerario
+        debeEliminarItinerario = true
         itinerarioId = intent.getIntExtra("itinerarioId", -1)
 
         setupMenu()
 
         // Inicializar vistas
+        searchEditText = findViewById(R.id.searchEditText) // Asegúrate de inicializar aquí
         recyclerView = findViewById(R.id.recyclerView)
-        searchEditText = findViewById(R.id.searchEditText)
         tipoSpinner = findViewById(R.id.tipoSpinner)
         progressBar = findViewById(R.id.progressBar)
 

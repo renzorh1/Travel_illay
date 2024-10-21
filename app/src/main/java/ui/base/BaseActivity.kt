@@ -27,8 +27,10 @@ import retrofit2.Response
 
 open class BaseActivity : AppCompatActivity() {
 
-    // Asume que tienes una variable para almacenar el usuario actual
+    // Bandera para controlar si se debe eliminar el itinerario o no
+    protected var debeEliminarItinerario: Boolean = false
     protected var usuarioId: Int = -1 // Cambia esto según tu lógica para obtener el ID del usuario
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +39,15 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        if (debeEliminarItinerario) {
+            showConfirmationDialog(
+                message = "¿Estás seguro de que quieres salir? Se eliminará el itinerario creado.",
+                positiveAction = { eliminarUltimoItinerario(usuarioId) },
+                negativeAction = { super.onBackPressed() }
+            )
+        } else {
+            super.onBackPressed() // Comportamiento normal sin eliminar itinerario
+        }
     }
 
     // Función genérica para mostrar un cuadro de diálogo de confirmación
@@ -80,19 +90,21 @@ open class BaseActivity : AppCompatActivity() {
             navigateTo(PrincipalActivity::class.java) // Navegar al inicio
         }
     }
-
     protected fun navigateTo(activityClass: Class<*>, itinerarioId: Int = -1) {
-        showConfirmationDialog(
-            message = "¿Estás seguro de que quieres salir? Se eliminará el último itinerario creado.",
-            positiveAction = {
-                eliminarUltimoItinerario(usuarioId) // Cambia a eliminarUltimoItinerario
-                startActivity(Intent(this, activityClass)) // Navega a la nueva actividad
-                finish() // Opcional: cerrar la actividad actual si se desea
-            },
-            negativeAction = {} // No hacer nada si el usuario elige "No"
-        )
+        if (debeEliminarItinerario) {
+            showConfirmationDialog(
+                message = "¿Estás seguro de que quieres salir? Se eliminará el último itinerario creado.",
+                positiveAction = {
+                    eliminarUltimoItinerario(usuarioId) // Cambia a eliminarUltimoItinerario
+                    startActivity(Intent(this, activityClass)) // Navega a la nueva actividad
+                    finish() // Opcional: cerrar la actividad actual si se desea
+                },
+                negativeAction = {} // No hacer nada si el usuario elige "No"
+            )
+        } else {
+            startActivity(Intent(this, activityClass)) // Navega sin eliminar itinerario
+        }
     }
-
     protected fun showPopupMenu(
         anchorView: View,
         onProfileClick: () -> Unit,
