@@ -1,6 +1,7 @@
 package ui.itinerarios.manual
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -43,14 +44,17 @@ class FilterActivity : BaseActivity() {
         setupMenu()
 
         // Inicializar vistas
-        searchEditText = findViewById(R.id.searchEditText) // Asegúrate de inicializar aquí
+        searchEditText = findViewById(R.id.searchEditText)
         recyclerView = findViewById(R.id.recyclerView)
         tipoSpinner = findViewById(R.id.tipoSpinner)
         progressBar = findViewById(R.id.progressBar)
 
         // Configurar RecyclerView y Adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
-        actividadAdapter = ActividadAdapter(emptyList())
+        actividadAdapter = ActividadAdapter(emptyList()) { actividad ->
+            abrirActividadEspecifica(actividad)
+        }
+
         recyclerView.adapter = actividadAdapter
 
         configurarSpinner()
@@ -68,14 +72,13 @@ class FilterActivity : BaseActivity() {
         }
     }
 
-    // Manejamos el evento de retroceso para mostrar el cuadro de diálogo de confirmación
     override fun onBackPressed() {
         showConfirmationDialog(
             message = "¿Estás seguro de que quieres salir? Se eliminará el itinerario creado.",
             positiveAction = {
-                eliminarUltimoItinerario(itinerarioId) // Acción si el usuario confirma
+                eliminarUltimoItinerario(itinerarioId)
             },
-            negativeAction = { super.onBackPressed() } // Asegúrate de que se llama a super si se elige "No"
+            negativeAction = { super.onBackPressed() }
         )
     }
 
@@ -97,8 +100,8 @@ class FilterActivity : BaseActivity() {
     private fun cargarLugaresCercanos(tipo: String) {
         progressBar.visibility = View.VISIBLE // Muestra la barra de progreso
 
-        val apiService = RetrofitClient.apiService // Usa el apiService ya definido
-        val typeQuery = if (tipo == "Todos") "" else tipo // Si selecciona 'Todos', no aplicamos filtro de tipo
+        val apiService = RetrofitClient.apiService
+        val typeQuery = if (tipo == "Todos") "" else tipo
         val call = apiService.getNearbyPlaces(typeQuery)
 
         call.enqueue(object : Callback<List<Actividad>> {
@@ -106,7 +109,7 @@ class FilterActivity : BaseActivity() {
                 progressBar.visibility = View.GONE
                 if (response.isSuccessful) {
                     response.body()?.let { actividades ->
-                        Log.d("FilterActivity", "Actividades recibidas: $actividades") // Log de verificación
+                        Log.d("FilterActivity", "Actividades recibidas: $actividades")
                         actividadesList = actividades
                         actividadAdapter.actualizarActividades(actividadesList)
                     } ?: run {
@@ -142,4 +145,16 @@ class FilterActivity : BaseActivity() {
         Log.e("FilterActivity", mensaje)
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
     }
+
+    private fun abrirActividadEspecifica(actividad: Actividad) {
+        val intent = Intent(this, SpecificActivity::class.java).apply {
+            putExtra("name", actividad.name) // Pasar el nombre de la actividad
+            putExtra("type", actividad.type) // Pasar el tipo de actividad
+            putExtra("rating", actividad.rating ?: 0.0) // Pasar el rating
+            putExtra("lat", actividad.lat) // Pasar la latitud
+            putExtra("lng", actividad.lng) // Pasar la longitud
+        }
+        startActivity(intent)
+    }
+
 }

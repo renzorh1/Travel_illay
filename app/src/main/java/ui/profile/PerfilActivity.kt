@@ -42,6 +42,7 @@ class PerfilActivity : BaseActivity() {
 
         if (userId != null) {
             Log.d("PerfilActivity", "User ID: $userId")
+            setupMenu() // Configurar el menú heredado de BaseActivity
             getUserBasicInfo()
             getUserPreferences()
         } else {

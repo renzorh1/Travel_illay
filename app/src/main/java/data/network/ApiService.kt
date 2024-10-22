@@ -41,4 +41,8 @@ interface ApiService {
     // Actualiza el método para eliminar el último itinerario de un usuario
     @DELETE("api/itinerarios/eliminar/{usuario_id}")
     fun eliminarUltimoItinerario(@Path("usuario_id") usuarioId: Int): Call<Void>
+
+    @GET("api/googlePlaces/activity")
+    fun getActivityByName(@Query("name") name: String): Call<Actividad>
 }
+

@@ -1,6 +1,5 @@
 package ui.configuration
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
@@ -13,7 +12,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ui.base.BaseActivity
-
 
 class PreferencesActivity : BaseActivity() {
 

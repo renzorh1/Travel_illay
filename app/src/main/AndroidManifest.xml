@@ -61,6 +61,9 @@
         <activity
             android:name="ui.itinerarios.manual.FilterActivity"
             android:exported="true" />
+
+        <activity android:name="ui.itinerarios.manual.SpecificActivity" />
+
     </application>
 
 </manifest>

@@ -17,8 +17,8 @@ import ui.main.MainActivity
 import ui.principal.PrincipalActivity
 import ui.profile.PerfilActivity
 import ui.configuration.ConfigurationActivity
+import ui.itinerarios.OpcionesItinerario // Importa OpcionesItinerario
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.util.Log
 import com.example.travelillay.data.network.RetrofitClient
 import retrofit2.Call
@@ -30,7 +30,6 @@ open class BaseActivity : AppCompatActivity() {
     // Bandera para controlar si se debe eliminar el itinerario o no
     protected var debeEliminarItinerario: Boolean = false
     protected var usuarioId: Int = -1 // Cambia esto según tu lógica para obtener el ID del usuario
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +76,7 @@ open class BaseActivity : AppCompatActivity() {
     protected fun setupMenu() {
         val menuButton: ImageButton? = findViewById(R.id.menuButton)
         val inicioButton: LinearLayout? = findViewById(R.id.inicioButton)
+        val crearButton: LinearLayout? = findViewById(R.id.crearButton) // Agrega el crearButton
 
         menuButton?.setOnClickListener { v ->
             showPopupMenu(v,
@@ -89,22 +89,29 @@ open class BaseActivity : AppCompatActivity() {
         inicioButton?.setOnClickListener {
             navigateTo(PrincipalActivity::class.java) // Navegar al inicio
         }
+
+        crearButton?.setOnClickListener {
+            navigateTo(OpcionesItinerario::class.java) // Navegar a OpcionesItinerario
+        }
     }
+
+
     protected fun navigateTo(activityClass: Class<*>, itinerarioId: Int = -1) {
         if (debeEliminarItinerario) {
             showConfirmationDialog(
                 message = "¿Estás seguro de que quieres salir? Se eliminará el último itinerario creado.",
                 positiveAction = {
-                    eliminarUltimoItinerario(usuarioId) // Cambia a eliminarUltimoItinerario
-                    startActivity(Intent(this, activityClass)) // Navega a la nueva actividad
-                    finish() // Opcional: cerrar la actividad actual si se desea
+                    eliminarUltimoItinerario(usuarioId)
+                    startActivity(Intent(this, activityClass))
+                    finish()
                 },
-                negativeAction = {} // No hacer nada si el usuario elige "No"
+                negativeAction = {}
             )
         } else {
             startActivity(Intent(this, activityClass)) // Navega sin eliminar itinerario
         }
     }
+
     protected fun showPopupMenu(
         anchorView: View,
         onProfileClick: () -> Unit,
@@ -149,14 +156,13 @@ open class BaseActivity : AppCompatActivity() {
         finish()
     }
 
-    // Llama a la API para eliminar el último itinerario del usuario
     protected fun eliminarUltimoItinerario(usuarioId: Int) {
         val apiService = RetrofitClient.apiService
         apiService.eliminarUltimoItinerario(usuarioId).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     showToast("Último itinerario eliminado")
-                    finish() // Cierra la actividad después de eliminar
+                    finish()
                 } else {
                     showToast("Error al eliminar itinerario")
                 }
@@ -168,7 +174,6 @@ open class BaseActivity : AppCompatActivity() {
         })
     }
 
-    // Método para obtener el ID del usuario de las preferencias compartidas
     private fun obtenerUsuarioIdSesion(): Int {
         return getSharedPreferences("TravelIllayPrefs", MODE_PRIVATE).getInt("userId", -1)
     }

@@ -9,14 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.travelillay.R
 import models.itineraries.Actividad
 
-class ActividadAdapter(private var actividades: List<Actividad>) :
-    RecyclerView.Adapter<ActividadAdapter.ActividadViewHolder>() {
-
-    private var onActividadClickListener: OnActividadClickListener? = null
-
-    fun setOnActividadClickListener(listener: OnActividadClickListener) {
-        this.onActividadClickListener = listener
-    }
+class ActividadAdapter(
+    private var actividades: List<Actividad>,
+    private val onActividadClickListener: (Actividad) -> Unit // Añade este parámetro
+) : RecyclerView.Adapter<ActividadAdapter.ActividadViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActividadViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -29,7 +25,7 @@ class ActividadAdapter(private var actividades: List<Actividad>) :
         holder.bind(actividad)
 
         holder.itemView.setOnClickListener {
-            onActividadClickListener?.onActividadClick(actividad)
+            onActividadClickListener(actividad) // Llama al listener
         }
     }
 
@@ -40,6 +36,7 @@ class ActividadAdapter(private var actividades: List<Actividad>) :
         notifyDataSetChanged()
     }
 
+    // ViewHolder para representar cada item de actividad
     class ActividadViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nombreTextView: TextView = itemView.findViewById(R.id.nombreTextView)
         private val tipoTextView: TextView = itemView.findViewById(R.id.tipoTextView)
@@ -52,7 +49,4 @@ class ActividadAdapter(private var actividades: List<Actividad>) :
             ratingTextView.text = actividad.rating?.toString() ?: "N/A"
         }
     }
-
-
-
 }
