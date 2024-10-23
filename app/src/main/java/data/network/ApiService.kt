@@ -44,5 +44,9 @@ interface ApiService {
 
     @GET("api/googlePlaces/activity")
     fun getActivityByName(@Query("name") name: String): Call<Actividad>
+
+    @POST("api/actividad/Guardaractividades")
+    fun guardarActividad(@Body actividad: Actividad): Call<Actividad>
+
 }
 

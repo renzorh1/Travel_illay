@@ -43,10 +43,10 @@ class ActividadAdapter(
         private val ratingTextView: TextView = itemView.findViewById(R.id.calificacionTextView)
 
         fun bind(actividad: Actividad) {
-            Log.d("ActividadAdapter", "Nombre: ${actividad.name}, Tipo: ${actividad.type}, Calificación: ${actividad.rating}")
-            nombreTextView.text = actividad.name.takeIf { it.isNotEmpty() } ?: "Sin Nombre"
-            tipoTextView.text = actividad.type?.takeIf { it.isNotEmpty() } ?: "Sin Tipo"
-            ratingTextView.text = actividad.rating?.toString() ?: "N/A"
+            Log.d("ActividadAdapter", "Nombre: ${actividad.nombre}, Tipo: ${actividad.tipo}, Calificación: ${actividad.calificacion}")
+            nombreTextView.text = actividad.nombre.takeIf { it.isNotEmpty() } ?: "Sin Nombre"
+            tipoTextView.text = actividad.tipo?.takeIf { it.isNotEmpty() } ?: "Sin Tipo"
+            ratingTextView.text = actividad.calificacion?.toString() ?: "N/A"
         }
     }
 }

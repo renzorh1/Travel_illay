@@ -12,6 +12,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ui.base.BaseActivity
+import java.text.SimpleDateFormat
+import java.util.*
 
 class PreferencesActivity : BaseActivity() {
 
@@ -104,12 +106,11 @@ class PreferencesActivity : BaseActivity() {
 
                         // Cargar horarios preferidos
                         it.hora_inicio_preferida?.let { horaInicio ->
-                            inicioTimePicker.hour = horaInicio.substring(11, 13).toInt()
-                            inicioTimePicker.minute = horaInicio.substring(14, 16).toInt()
+                            setTimePickerValue(inicioTimePicker, horaInicio, "Error al convertir hora de inicio")
                         }
+
                         it.hora_fin_preferida?.let { horaFin ->
-                            finTimePicker.hour = horaFin.substring(11, 13).toInt()
-                            finTimePicker.minute = horaFin.substring(14, 16).toInt()
+                            setTimePickerValue(finTimePicker, horaFin, "Error al convertir hora de fin")
                         }
                     }
                 }
@@ -122,26 +123,41 @@ class PreferencesActivity : BaseActivity() {
         })
     }
 
+    // Establecer el valor del TimePicker a partir de la hora en formato ISO
+    private fun setTimePickerValue(timePicker: TimePicker, hora: String, errorMessage: String) {
+        try {
+            val timeParts = hora.split("T")[1].split(":")
+            timePicker.hour = timeParts[0].toInt()
+            timePicker.minute = timeParts[1].toInt()
+        } catch (e: Exception) {
+            Log.e("PreferencesActivity", errorMessage, e)
+            showToast(errorMessage)
+        }
+    }
+
     // Guardar las preferencias del usuario en la API
     private fun savePreferences(horaInicio: String, horaFin: String, actividades: List<String>) {
         val id = userId ?: return showToast("ID de usuario no válido")
 
-        // Formatear los horarios en el formato adecuado
-        val horaInicioFormateada = "1970-01-01T$horaInicio:00.000Z"
-        val horaFinFormateada = "1970-01-01T$horaFin:00.000Z"
+        // Formatear la hora a ISO 8601: "1970-01-01THH:mm:ssZ"
+        val formattedHoraInicio = formatToISO8601(horaInicio)
+        val formattedHoraFin = formatToISO8601(horaFin)
 
         val preferenciasRequest = PreferenciasRequest(
             actividades_favoritas = actividades,
-            hora_inicio_preferida = horaInicioFormateada,
-            hora_fin_preferida = horaFinFormateada
+            hora_inicio_preferida = formattedHoraInicio,
+            hora_fin_preferida = formattedHoraFin
         )
 
-        // Llamada a la API para actualizar las preferencias
+        if (horaFin < horaInicio) {
+            showToast("La hora de fin debe ser posterior a la hora de inicio")
+            return
+        }
+
         apiService.updateUserPreferences(id, preferenciasRequest).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     Toast.makeText(this@PreferencesActivity, "Preferencias guardadas", Toast.LENGTH_SHORT).show()
-                    // Puedes redirigir a otra actividad si lo deseas
                 } else {
                     Toast.makeText(this@PreferencesActivity, "Error al guardar preferencias", Toast.LENGTH_SHORT).show()
                 }
@@ -151,6 +167,12 @@ class PreferencesActivity : BaseActivity() {
                 Log.e("PreferencesActivity", "Error al guardar preferencias", t)
                 Toast.makeText(this@PreferencesActivity, "Error al guardar preferencias", Toast.LENGTH_SHORT).show()
             }
+
         })
+    }
+
+    // Formatear hora a ISO 8601
+    private fun formatToISO8601(hora: String): String {
+        return "1970-01-01T$hora:00Z" // Cambia la fecha según sea necesario
     }
 }

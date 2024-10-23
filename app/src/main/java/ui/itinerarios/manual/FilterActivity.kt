@@ -129,8 +129,8 @@ class FilterActivity : BaseActivity() {
 
     private fun aplicarFiltros(nombre: String, tipo: String) {
         val listaFiltrada = actividadesList.filter { actividad ->
-            actividad.name.contains(nombre, ignoreCase = true) &&
-                    (tipo == "Todos" || actividad.type.equals(tipo, ignoreCase = true))
+            actividad.nombre.contains(nombre, ignoreCase = true) &&
+                    (tipo == "Todos" || actividad.tipo.equals(tipo, ignoreCase = true))
         }
         actividadAdapter.actualizarActividades(listaFiltrada)
     }
@@ -148,11 +148,11 @@ class FilterActivity : BaseActivity() {
 
     private fun abrirActividadEspecifica(actividad: Actividad) {
         val intent = Intent(this, SpecificActivity::class.java).apply {
-            putExtra("name", actividad.name) // Pasar el nombre de la actividad
-            putExtra("type", actividad.type) // Pasar el tipo de actividad
-            putExtra("rating", actividad.rating ?: 0.0) // Pasar el rating
-            putExtra("lat", actividad.lat) // Pasar la latitud
-            putExtra("lng", actividad.lng) // Pasar la longitud
+            putExtra("name", actividad.nombre) // Pasar el nombre de la actividad
+            putExtra("type", actividad.tipo) // Pasar el tipo de actividad
+            putExtra("rating", actividad.calificacion ?: 0.0) // Pasar el rating
+            putExtra("lat", actividad.latitud) // Pasar la latitud
+            putExtra("lng", actividad.longitud) // Pasar la longitud
         }
         startActivity(intent)
     }
