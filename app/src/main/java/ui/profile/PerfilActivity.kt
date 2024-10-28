@@ -191,7 +191,5 @@ class PerfilActivity : BaseActivity() {
         }
     }
 
-    override fun showToast(message: String) {
-        super.showToast(message)
-    }
+
 }

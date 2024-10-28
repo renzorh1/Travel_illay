@@ -1,8 +1,9 @@
 package ui.itinerarios.manual
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -11,38 +12,45 @@ import models.itineraries.Actividad
 import com.example.travelillay.data.network.RetrofitClient
 import com.example.travelillay.data.network.ApiService
 import ui.base.BaseActivity
+import models.auth.responses.RelacionResponse
+import models.auth.requests.RelacionRequest
 
 class SpecificActivity : BaseActivity() {
 
     private lateinit var apiService: ApiService
-    // Declarar las vistas como variables de instancia
     private lateinit var typeTextView: TextView
     private lateinit var ratingTextView: TextView
     private lateinit var locationTextView: TextView
 
-    // Variables para almacenar latitud y longitud
     private var latitud: Double = 0.0
     private var longitud: Double = 0.0
+    override var itinerarioId: Int = -1 // Cambiado a protected y override
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.specific_activity)
-        setupMenu() // Configurar el menú heredado de BaseActivity
+        setupMenu() // Configurar el menú
 
         // Obtener las vistas
         val nameTextView = findViewById<TextView>(R.id.nameTextView)
-        typeTextView = findViewById<TextView>(R.id.typeTextView) // Asignar aquí
-        ratingTextView = findViewById<TextView>(R.id.ratingTextView) // Asignar aquí
-        locationTextView = findViewById<TextView>(R.id.locationTextView) // Asignar aquí
+        typeTextView = findViewById<TextView>(R.id.typeTextView)
+        ratingTextView = findViewById<TextView>(R.id.ratingTextView)
+        locationTextView = findViewById<TextView>(R.id.locationTextView)
         val inicioTimePicker = findViewById<TimePicker>(R.id.inicioTimePicker)
         val finTimePicker = findViewById<TimePicker>(R.id.finTimePicker)
         val guardarButton = findViewById<Button>(R.id.btnGuardarActividad)
 
-        // Obtener el nombre de la actividad del intent
+        // Obtener el nombre de la actividad y el ID del itinerario del intent
         val name = intent.getStringExtra("name") ?: "Nombre no disponible"
-        nameTextView.text = name
+        itinerarioId = intent.getIntExtra("itinerarioId", -1)
 
-        // Llamar a la API para obtener la actividad por nombre
+        if (itinerarioId == -1) {
+            Toast.makeText(this, "Error: Itinerario ID no válido.", Toast.LENGTH_SHORT).show()
+            finish() // Cerrar la actividad si el ID no es válido
+            return
+        }
+
+        nameTextView.text = name
         obtenerActividadPorNombre(name)
 
         // Configurar el botón de guardar
@@ -54,6 +62,16 @@ class SpecificActivity : BaseActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("itinerarioId", itinerarioId) // Guardar el itinerarioId
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        itinerarioId = savedInstanceState.getInt("itinerarioId", -1) // Restaurar el itinerarioId
+    }
+
     private fun obtenerActividadPorNombre(name: String) {
         apiService = RetrofitClient.apiService
         val call = apiService.getActivityByName(name)
@@ -63,11 +81,9 @@ class SpecificActivity : BaseActivity() {
                 if (response.isSuccessful) {
                     val actividad = response.body()
                     actividad?.let {
-                        // Mostrar los datos en las vistas
                         typeTextView.text = it.tipo
                         ratingTextView.text = it.calificacion?.toString() ?: "No disponible"
                         locationTextView.text = "${it.latitud}, ${it.longitud}"
-                        // Asignar los valores de latitud y longitud
                         latitud = it.latitud
                         longitud = it.longitud
                     } ?: run {
@@ -86,12 +102,12 @@ class SpecificActivity : BaseActivity() {
 
     private fun guardarActividad(nombre: String, tipo: String, calificacion: Double?, horaInicio: String, horaFin: String) {
         val nuevaActividad = Actividad(
-            id = 0, // Este campo puede ser auto-generado en el backend
+            id = 0,
             nombre = nombre,
             calificacion = calificacion,
             tipo = tipo,
-            latitud = latitud, // Usar la latitud real
-            longitud = longitud, // Usar la longitud real
+            latitud = latitud,
+            longitud = longitud,
             hora_inicio_preferida = formatToISO8601(horaInicio),
             hora_fin_preferida = formatToISO8601(horaFin)
         )
@@ -99,14 +115,16 @@ class SpecificActivity : BaseActivity() {
         apiService.guardarActividad(nuevaActividad).enqueue(object : Callback<Actividad> {
             override fun onResponse(call: Call<Actividad>, response: Response<Actividad>) {
                 if (response.isSuccessful) {
-                    // Aquí puedes obtener los detalles de la actividad guardada
                     val actividadGuardada = response.body()
                     actividadGuardada?.let {
                         Toast.makeText(this@SpecificActivity, "Actividad '${it.nombre}' guardada exitosamente", Toast.LENGTH_SHORT).show()
+                        guardarRelacionItinerarioActividad(it.id) // Asegúrate de que it.id sea correcto
                     } ?: run {
+                        Log.e("SpecificActivity", "Error al obtener datos de la actividad guardada")
                         Toast.makeText(this@SpecificActivity, "Error al obtener datos de la actividad guardada", Toast.LENGTH_SHORT).show()
                     }
                 } else {
+                    Log.e("SpecificActivity", "Error al guardar actividad: ${response.code()} - ${response.errorBody()?.string()}")
                     Toast.makeText(this@SpecificActivity, "Error al guardar actividad: ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -115,6 +133,33 @@ class SpecificActivity : BaseActivity() {
                 Toast.makeText(this@SpecificActivity, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun guardarRelacionItinerarioActividad(actividadId: Int) {
+        if (itinerarioId > 0) {
+            val request = RelacionRequest(itinerarioId, actividadId) // Cambiado a Int
+            Log.d("SpecificActivity", "Guardando relación: $request")
+            apiService.guardarRelacionItinerarioActividad(request).enqueue(object : Callback<RelacionResponse> {
+                override fun onResponse(call: Call<RelacionResponse>, response: Response<RelacionResponse>) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(this@SpecificActivity, "Relación guardada en itinerario exitosamente", Toast.LENGTH_SHORT).show()
+                        // Regresar a la actividad anterior
+                        setResult(RESULT_OK)
+                        finish()
+                    } else {
+                        // Manejo del error
+                        val errorMsg = response.errorBody()?.string() ?: "Error desconocido"
+                        Toast.makeText(this@SpecificActivity, "Error al guardar relación en itinerario: $errorMsg", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<RelacionResponse>, t: Throwable) {
+                    Toast.makeText(this@SpecificActivity, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        } else {
+            Toast.makeText(this, "Itinerario ID no válido", Toast.LENGTH_SHORT).show()
+        }
     }
 
     // Formatear hora a ISO 8601

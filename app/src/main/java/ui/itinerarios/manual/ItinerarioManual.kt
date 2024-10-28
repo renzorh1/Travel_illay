@@ -3,6 +3,7 @@ package ui.itinerarios.manual
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -16,6 +17,8 @@ import com.example.travelillay.data.network.ApiService
 import com.example.travelillay.data.network.RetrofitClient
 import models.itineraries.Itinerario
 import ui.base.BaseActivity
+import ui.itinerarios.manual.SpecificActivity
+import ui.itinerarios.manual.FilterActivity
 
 class ItinerarioManual : BaseActivity() {
 
@@ -23,11 +26,12 @@ class ItinerarioManual : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.itinerario_manual)
 
+        setupMenu()
+
         val itinerarioEditText = findViewById<EditText>(R.id.nameEditText)
         val editButton = findViewById<ImageButton>(R.id.editNameButton)
         val siguienteButton = findViewById<Button>(R.id.nextButton)
 
-        // Verificar si el usuario está autenticado
         if (usuarioId <= 0) {
             showToast("ID de usuario no válido")
             finish()
@@ -66,52 +70,67 @@ class ItinerarioManual : BaseActivity() {
                 return@setOnClickListener
             }
 
-            crearItinerario(Itinerario(id = 0, usuario_id = usuarioId, nombre = itinerarioNombre, fecha_creacion = "", es_activo = true))
+            val nuevoItinerario = Itinerario(
+                id = -1,  // Indicar que aún no tiene un ID asignado
+                usuario_id = usuarioId,
+                nombre = itinerarioNombre,
+                fecha_creacion = "",
+                es_activo = true
+            )
+
+            guardarItinerarioRemoto(nuevoItinerario)
         }
     }
 
-    private fun crearItinerario(itinerario: Itinerario) {
-        RetrofitClient.createService(ApiService::class.java).crearItinerario(itinerario).enqueue(object : Callback<Itinerario> {
+    private fun mostrarTeclado(editText: EditText) {
+        editText.isEnabled = true
+        editText.requestFocus()
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun ocultarTeclado(editText: EditText) {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(editText.windowToken, 0)
+        editText.clearFocus()
+    }
+
+    private fun guardarItinerarioRemoto(itinerario: Itinerario) {
+        val apiService = RetrofitClient.apiService
+        apiService.crearItinerario(itinerario).enqueue(object : Callback<Itinerario> {
             override fun onResponse(call: Call<Itinerario>, response: Response<Itinerario>) {
                 if (response.isSuccessful) {
-                    response.body()?.let { nuevoItinerario ->
-                        showToast("Itinerario guardado con éxito")
-                        navigateToFilterActivity(nuevoItinerario.id)
-                    } ?: showToast("Error: No se pudo obtener el itinerario guardado")
+                    val itinerarioGuardado = response.body()
+                    showToast("Itinerario guardado correctamente")
+                    itinerarioGuardado?.let { guardado ->
+                        guardarItinerarioId(guardado.id)  // Guardar el nuevo ID en una variable
+                        Log.d(
+                            "ItinerarioManual",
+                            "Itinerario ID: ${guardado.id}"
+                        )  // Asegúrate de que el ID es correcto
+                        // Pasar el itinerarioId a FilterActivity
+                        navigateTo(
+                            FilterActivity::class.java,
+                            guardado.id
+                        ) // Aquí solo llamas sin sobrescribir
+                    }
                 } else {
-                    mostrarErrorDeServidor(response)
+                    showToast("Error al guardar el itinerario")
                 }
             }
 
             override fun onFailure(call: Call<Itinerario>, t: Throwable) {
-                showToast("Error en la conexión: ${t.message}")
+                showToast("Error de conexión: ${t.message}")
+                Log.e("ItinerarioManual", "Fallo al guardar itinerario", t)
             }
         })
     }
 
-    private fun mostrarErrorDeServidor(response: Response<Itinerario>) {
-        val errorBody = response.errorBody()?.string() ?: "Error desconocido"
-        println("Error en el servidor: $errorBody")
-        showToast("Error al guardar itinerario: $errorBody")
-    }
 
-    private fun navigateToFilterActivity(itinerarioId: Int) {
-        val intent = Intent(this, FilterActivity::class.java).apply {
-            putExtra("itinerarioId", itinerarioId)
-            putExtra("usuarioId", usuarioId) // Pasa el ID del usuario
-        }
-        startActivity(intent)
-        finish()
-    }
-
-    private fun ocultarTeclado(view: EditText) {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
-        view.clearFocus()
-    }
-
-    private fun mostrarTeclado(editText: EditText) {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
+    // Método para navegar a otra actividad (sobrescribiendo el método de BaseActivity)
+    override fun navigateTo(activityClass: Class<*>, itinerarioId: Int) {
+        val intent = Intent(this, activityClass)
+        intent.putExtra("itinerarioId", itinerarioId) // Aquí pasas el ID
+        startActivity(intent) // Inicia la actividad
     }
 }

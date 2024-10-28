@@ -21,46 +21,56 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.util.Log
+import android.widget.Button
 import com.example.travelillay.data.network.RetrofitClient
 import ui.base.BaseActivity
+import models.auth.requests.RelacionRequest
+import models.auth.responses.RelacionResponse
+import ui.principal.PrincipalActivity
 
 class FilterActivity : BaseActivity() {
 
-    private var itinerarioId: Int = -1 // Variable para almacenar el ID del itinerario
+    private val actividadesSeleccionadas = mutableListOf<Int>()
+    override var itinerarioId: Int = -1 // Cambiado a Int
     private lateinit var actividadAdapter: ActividadAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchEditText: EditText
     private lateinit var tipoSpinner: Spinner
     private lateinit var progressBar: ProgressBar
     private var actividadesList: List<Actividad> = emptyList()
+    override var usuarioId: Int = -1 // No necesitas cambiar esto
+
+    companion object {
+        const val REQUEST_CODE = 1001
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        debeEliminarItinerario = true
         itinerarioId = intent.getIntExtra("itinerarioId", -1)
 
+        if (itinerarioId != -1) {
+            Log.d("FilterActivity", "Itinerario ID recibido: $itinerarioId")
+            // Haz algo con itinerarioId, como cargar las actividades asociadas
+        } else {
+            showToast("ID de itinerario no válido")
+            finish()
+        }
         setupMenu()
 
-        // Inicializar vistas
         searchEditText = findViewById(R.id.searchEditText)
         recyclerView = findViewById(R.id.recyclerView)
         tipoSpinner = findViewById(R.id.tipoSpinner)
         progressBar = findViewById(R.id.progressBar)
 
-        // Configurar RecyclerView y Adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
-        actividadAdapter = ActividadAdapter(emptyList()) { actividad ->
-            abrirActividadEspecifica(actividad)
-        }
-
+        actividadAdapter = ActividadAdapter(emptyList()) { actividad -> abrirActividadEspecifica(actividad) }
         recyclerView.adapter = actividadAdapter
 
         configurarSpinner()
         cargarLugaresCercanos("Todos")
 
-        // Configurar búsqueda
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 ocultarTeclado()
@@ -70,16 +80,51 @@ class FilterActivity : BaseActivity() {
                 false
             }
         }
+
+        findViewById<Button>(R.id.crearItinerarioButton).setOnClickListener {
+            if (actividadesSeleccionadas.isNotEmpty()) {
+                guardarItinerarioActividades()
+            } else {
+                Toast.makeText(this, "No se han seleccionado actividades.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
-    override fun onBackPressed() {
-        showConfirmationDialog(
-            message = "¿Estás seguro de que quieres salir? Se eliminará el itinerario creado.",
-            positiveAction = {
-                eliminarUltimoItinerario(itinerarioId)
-            },
-            negativeAction = { super.onBackPressed() }
-        )
+    private fun guardarItinerarioActividades() {
+        val apiService = RetrofitClient.apiService
+        val relaciones = actividadesSeleccionadas.map { RelacionRequest(itinerarioId, it) } // Mantener como Int
+        val totalRelaciones = relaciones.size
+        var relacionesGuardadas = 0
+
+        for (request in relaciones) {
+            apiService.guardarRelacionItinerarioActividad(request).enqueue(object : Callback<RelacionResponse> {
+                override fun onResponse(call: Call<RelacionResponse>, response: Response<RelacionResponse>) {
+                    if (response.isSuccessful) {
+                        Log.d("FilterActivity", "Relación guardada: ${request}")
+                    } else {
+                        val errorMsg = response.errorBody()?.string() ?: "Error desconocido"
+                        mostrarError("Error al guardar relación: $errorMsg")
+                    }
+                    relacionesGuardadas++
+                    verificarSiTodasGuardadas(totalRelaciones, relacionesGuardadas)
+                }
+
+                override fun onFailure(call: Call<RelacionResponse>, t: Throwable) {
+                    mostrarError("Error de conexión: ${t.message}")
+                    relacionesGuardadas++
+                    verificarSiTodasGuardadas(totalRelaciones, relacionesGuardadas)
+                }
+            })
+        }
+    }
+
+    private fun verificarSiTodasGuardadas(total: Int, guardadas: Int) {
+        if (guardadas == total) {
+            Toast.makeText(this, "Actividades guardadas en el itinerario.", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, PrincipalActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun configurarSpinner() {
@@ -98,8 +143,7 @@ class FilterActivity : BaseActivity() {
     }
 
     private fun cargarLugaresCercanos(tipo: String) {
-        progressBar.visibility = View.VISIBLE // Muestra la barra de progreso
-
+        progressBar.visibility = View.VISIBLE
         val apiService = RetrofitClient.apiService
         val typeQuery = if (tipo == "Todos") "" else tipo
         val call = apiService.getNearbyPlaces(typeQuery)
@@ -122,7 +166,7 @@ class FilterActivity : BaseActivity() {
 
             override fun onFailure(call: Call<List<Actividad>>, t: Throwable) {
                 progressBar.visibility = View.GONE
-                mostrarError("Error de conexión: ${t.message}")
+                mostrarError("Error de conexión: ${t.message}. ¿Deseas intentar nuevamente?")
             }
         })
     }
@@ -148,13 +192,20 @@ class FilterActivity : BaseActivity() {
 
     private fun abrirActividadEspecifica(actividad: Actividad) {
         val intent = Intent(this, SpecificActivity::class.java).apply {
-            putExtra("name", actividad.nombre) // Pasar el nombre de la actividad
-            putExtra("type", actividad.tipo) // Pasar el tipo de actividad
-            putExtra("rating", actividad.calificacion ?: 0.0) // Pasar el rating
-            putExtra("lat", actividad.latitud) // Pasar la latitud
-            putExtra("lng", actividad.longitud) // Pasar la longitud
+            putExtra("name", actividad.nombre)
+            putExtra("itinerarioId", itinerarioId) // Pasar itinerarioId a SpecificActivity
         }
-        startActivity(intent)
+        startActivityForResult(intent, REQUEST_CODE)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            data?.getIntExtra("actividadId", -1)?.let { actividadId ->
+                actividadesSeleccionadas.add(actividadId) // Cambiado a Int
+                Toast.makeText(this, "Actividad añadida al itinerario.", Toast.LENGTH_SHORT).show()
+                cargarLugaresCercanos(tipoSpinner.selectedItem.toString())
+            }
+        }
+    }
 }

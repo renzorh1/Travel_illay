@@ -30,7 +30,7 @@ interface ApiService {
     fun updateUserPreferences(@Path("id") userId: Int, @Body preferenciasRequest: PreferenciasRequest): Call<Void>
 
     @POST("api/itinerarios/crear")
-    fun crearItinerario(@Body itinerario: Itinerario): Call<Itinerario>
+    fun crearItinerario(@Body itinerario: Itinerario): Call<Itinerario> // Asegúrate de que sea Call<Itinerario>
 
     @GET("api/googlePlaces/nearby")
     fun getNearbyPlaces(): Call<List<Actividad>>
@@ -47,6 +47,11 @@ interface ApiService {
 
     @POST("api/actividad/Guardaractividades")
     fun guardarActividad(@Body actividad: Actividad): Call<Actividad>
+
+    @POST("api/itinerarioactividad/guardarelacion")
+    fun guardarRelacionItinerarioActividad(@Body body: RelacionRequest): Call<RelacionResponse>
+
+
 
 }
 
