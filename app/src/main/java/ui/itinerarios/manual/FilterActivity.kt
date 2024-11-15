@@ -67,7 +67,8 @@ class FilterActivity : BaseActivity() {
         progressBar = findViewById(R.id.progressBar)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        actividadAdapter = ActividadAdapter(emptyList()) { actividad -> abrirActividadEspecifica(actividad) }
+        actividadAdapter =
+            ActividadAdapter(emptyList()) { actividad -> abrirActividadEspecifica(actividad) }
         recyclerView.adapter = actividadAdapter
 
         configurarSpinner()
@@ -87,7 +88,8 @@ class FilterActivity : BaseActivity() {
             if (actividadesSeleccionadas.isNotEmpty()) {
                 guardarItinerarioActividades()
             } else {
-                Toast.makeText(this, "No se han seleccionado actividades.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "No se han seleccionado actividades.", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
@@ -99,30 +101,35 @@ class FilterActivity : BaseActivity() {
         var relacionesGuardadas = 0
 
         for (request in relaciones) {
-            apiService.guardarRelacionItinerarioActividad(request).enqueue(object : Callback<RelacionResponse> {
-                override fun onResponse(call: Call<RelacionResponse>, response: Response<RelacionResponse>) {
-                    if (response.isSuccessful) {
-                        Log.d("FilterActivity", "Relación guardada: $request")
-                    } else {
-                        val errorMsg = response.errorBody()?.string() ?: "Error desconocido"
-                        mostrarError("Error al guardar relación: $errorMsg")
+            apiService.guardarRelacionItinerarioActividad(request)
+                .enqueue(object : Callback<RelacionResponse> {
+                    override fun onResponse(
+                        call: Call<RelacionResponse>,
+                        response: Response<RelacionResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            Log.d("FilterActivity", "Relación guardada: $request")
+                        } else {
+                            val errorMsg = response.errorBody()?.string() ?: "Error desconocido"
+                            mostrarError("Error al guardar relación: $errorMsg")
+                        }
+                        relacionesGuardadas++
+                        verificarSiTodasGuardadas(totalRelaciones, relacionesGuardadas)
                     }
-                    relacionesGuardadas++
-                    verificarSiTodasGuardadas(totalRelaciones, relacionesGuardadas)
-                }
 
-                override fun onFailure(call: Call<RelacionResponse>, t: Throwable) {
-                    mostrarError("Error de conexión: ${t.message}")
-                    relacionesGuardadas++
-                    verificarSiTodasGuardadas(totalRelaciones, relacionesGuardadas)
-                }
-            })
+                    override fun onFailure(call: Call<RelacionResponse>, t: Throwable) {
+                        mostrarError("Error de conexión: ${t.message}")
+                        relacionesGuardadas++
+                        verificarSiTodasGuardadas(totalRelaciones, relacionesGuardadas)
+                    }
+                })
         }
     }
 
     private fun verificarSiTodasGuardadas(total: Int, guardadas: Int) {
         if (guardadas == total) {
-            Toast.makeText(this, "Actividades guardadas en el itinerario.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Actividades guardadas en el itinerario.", Toast.LENGTH_SHORT)
+                .show()
             val intent = Intent(this, PrincipalActivity::class.java)
             startActivity(intent)
             finish()
@@ -136,7 +143,12 @@ class FilterActivity : BaseActivity() {
         tipoSpinner.adapter = adapter
 
         tipoSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 cargarLugaresCercanos(tipos[position])
             }
 
@@ -151,7 +163,10 @@ class FilterActivity : BaseActivity() {
         val call = apiService.getNearbyPlaces(typeQuery)
 
         call.enqueue(object : Callback<List<Actividad>> {
-            override fun onResponse(call: Call<List<Actividad>>, response: Response<List<Actividad>>) {
+            override fun onResponse(
+                call: Call<List<Actividad>>,
+                response: Response<List<Actividad>>
+            ) {
                 progressBar.visibility = View.GONE
                 if (response.isSuccessful) {
                     response.body()?.let { actividades ->
@@ -203,10 +218,21 @@ class FilterActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            data?.getIntExtra("actividadId", -1)?.let { actividadId ->
-                actividadesSeleccionadas.add(actividadId)
-                Toast.makeText(this, "Actividad añadida al itinerario.", Toast.LENGTH_SHORT).show()
-                cargarLugaresCercanos(tipoSpinner.selectedItem.toString())
+            data?.let {
+                val itinerarioId = it.getIntExtra("itinerarioId", -1)
+                if (itinerarioId != -1) {
+                    Toast.makeText(
+                        this,
+                        "Regreso desde SpecificActivity con Itinerario ID: $itinerarioId",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        this,
+                        "No se recibió un Itinerario ID válido",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
     }

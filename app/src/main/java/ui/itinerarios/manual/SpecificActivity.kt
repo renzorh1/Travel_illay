@@ -39,6 +39,7 @@ class SpecificActivity : BaseActivity() {
         val inicioTimePicker = findViewById<TimePicker>(R.id.inicioTimePicker)
         val finTimePicker = findViewById<TimePicker>(R.id.finTimePicker)
         val guardarButton = findViewById<Button>(R.id.btnGuardarActividad)
+        val backButton = findViewById<Button>(R.id.backButton)
 
         // Obtener el nombre de la actividad y el ID del itinerario del intent
         val name = intent.getStringExtra("name") ?: "Nombre no disponible"
@@ -60,6 +61,15 @@ class SpecificActivity : BaseActivity() {
 
             guardarActividad(name, typeTextView.text.toString(), ratingTextView.text.toString().toDoubleOrNull(), horaInicio, horaFin)
         }
+
+        backButton.setOnClickListener {
+            val intent = Intent()
+            intent.putExtra("itinerarioId", itinerarioId)
+            setResult(RESULT_OK, intent)
+            Toast.makeText(this, "Regresando a FilterActivity con Itinerario ID: $itinerarioId", Toast.LENGTH_SHORT).show()
+            finish()
+        }
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

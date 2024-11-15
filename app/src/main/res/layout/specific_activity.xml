@@ -13,6 +13,7 @@
         android:fillViewport="true"
         android:padding="16dp">
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,6 +21,14 @@
             android:orientation="vertical">
 
             <!-- Nombre -->
+            <Button
+                android:id="@+id/backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:text="Regresar" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -134,6 +143,8 @@
                     android:layout_weight="0.6"
                     android:timePickerMode="spinner" />
             </LinearLayout>
+
+
 
             <!-- Selector de tiempo para el fin -->
             <LinearLayout
