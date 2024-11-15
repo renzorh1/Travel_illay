@@ -3,6 +3,7 @@ package ui.itinerarios.manual
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -20,7 +21,6 @@ import com.example.travelillay.ui.ActividadAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import android.util.Log
 import android.widget.Button
 import com.example.travelillay.data.network.RetrofitClient
 import ui.base.BaseActivity
@@ -38,7 +38,7 @@ class FilterActivity : BaseActivity() {
     private lateinit var tipoSpinner: Spinner
     private lateinit var progressBar: ProgressBar
     private var actividadesList: List<Actividad> = emptyList()
-    override var usuarioId: Int = -1 // No necesitas cambiar esto
+    override var usuarioId: Int = -1
 
     companion object {
         const val REQUEST_CODE = 1001
@@ -52,11 +52,13 @@ class FilterActivity : BaseActivity() {
 
         if (itinerarioId != -1) {
             Log.d("FilterActivity", "Itinerario ID recibido: $itinerarioId")
-            // Haz algo con itinerarioId, como cargar las actividades asociadas
+            Toast.makeText(this, "Itinerario ID recibido: $itinerarioId", Toast.LENGTH_SHORT).show()
+            // Aquí puedes cargar actividades asociadas a este itinerario ID si es necesario
         } else {
             showToast("ID de itinerario no válido")
             finish()
         }
+
         setupMenu()
 
         searchEditText = findViewById(R.id.searchEditText)
@@ -92,7 +94,7 @@ class FilterActivity : BaseActivity() {
 
     private fun guardarItinerarioActividades() {
         val apiService = RetrofitClient.apiService
-        val relaciones = actividadesSeleccionadas.map { RelacionRequest(itinerarioId, it) } // Mantener como Int
+        val relaciones = actividadesSeleccionadas.map { RelacionRequest(itinerarioId, it) }
         val totalRelaciones = relaciones.size
         var relacionesGuardadas = 0
 
@@ -100,7 +102,7 @@ class FilterActivity : BaseActivity() {
             apiService.guardarRelacionItinerarioActividad(request).enqueue(object : Callback<RelacionResponse> {
                 override fun onResponse(call: Call<RelacionResponse>, response: Response<RelacionResponse>) {
                     if (response.isSuccessful) {
-                        Log.d("FilterActivity", "Relación guardada: ${request}")
+                        Log.d("FilterActivity", "Relación guardada: $request")
                     } else {
                         val errorMsg = response.errorBody()?.string() ?: "Error desconocido"
                         mostrarError("Error al guardar relación: $errorMsg")
@@ -202,7 +204,7 @@ class FilterActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             data?.getIntExtra("actividadId", -1)?.let { actividadId ->
-                actividadesSeleccionadas.add(actividadId) // Cambiado a Int
+                actividadesSeleccionadas.add(actividadId)
                 Toast.makeText(this, "Actividad añadida al itinerario.", Toast.LENGTH_SHORT).show()
                 cargarLugaresCercanos(tipoSpinner.selectedItem.toString())
             }

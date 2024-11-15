@@ -6,6 +6,7 @@ import models.itineraries.Actividad
 import models.itineraries.Itinerario
 import models.preferences.Preferencias
 import models.preferences.PreferenciasRequest
+import models.itineraries.ProximoItinerarioIdResponse
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -51,7 +52,8 @@ interface ApiService {
     @POST("api/itinerarioactividad/guardarelacion")
     fun guardarRelacionItinerarioActividad(@Body body: RelacionRequest): Call<RelacionResponse>
 
-
+    @GET("api/itinerarios/ultimo-id/{usuario_id}")
+    fun obtenerProximoItinerarioId(@Path("usuario_id") usuarioId: Int): Call<ProximoItinerarioIdResponse>
 
 }
 
