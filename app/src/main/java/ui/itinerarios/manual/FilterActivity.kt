@@ -31,7 +31,7 @@ import ui.principal.PrincipalActivity
 class FilterActivity : BaseActivity() {
 
     private val actividadesSeleccionadas = mutableListOf<Int>()
-    override var itinerarioId: Int = -1 // Cambiado a Int
+    override var itinerarioId: Int = -1
     private lateinit var actividadAdapter: ActividadAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchEditText: EditText
@@ -53,7 +53,6 @@ class FilterActivity : BaseActivity() {
         if (itinerarioId != -1) {
             Log.d("FilterActivity", "Itinerario ID recibido: $itinerarioId")
             Toast.makeText(this, "Itinerario ID recibido: $itinerarioId", Toast.LENGTH_SHORT).show()
-            // Aquí puedes cargar actividades asociadas a este itinerario ID si es necesario
         } else {
             showToast("ID de itinerario no válido")
             finish()
@@ -67,8 +66,7 @@ class FilterActivity : BaseActivity() {
         progressBar = findViewById(R.id.progressBar)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        actividadAdapter =
-            ActividadAdapter(emptyList()) { actividad -> abrirActividadEspecifica(actividad) }
+        actividadAdapter = ActividadAdapter(emptyList()) { actividad -> abrirActividadEspecifica(actividad) }
         recyclerView.adapter = actividadAdapter
 
         configurarSpinner()
@@ -84,12 +82,13 @@ class FilterActivity : BaseActivity() {
             }
         }
 
+        // Configuración del botón "Finalizar"
         findViewById<Button>(R.id.crearItinerarioButton).setOnClickListener {
             if (actividadesSeleccionadas.isNotEmpty()) {
-                guardarItinerarioActividades()
+                guardarItinerarioActividades() // Guarda las actividades seleccionadas
             } else {
-                Toast.makeText(this, "No se han seleccionado actividades.", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, "Redirigiendo...", Toast.LENGTH_SHORT).show()
+                irAPantallaPrincipal() // Redirige directamente si no hay actividades seleccionadas
             }
         }
     }
@@ -103,10 +102,7 @@ class FilterActivity : BaseActivity() {
         for (request in relaciones) {
             apiService.guardarRelacionItinerarioActividad(request)
                 .enqueue(object : Callback<RelacionResponse> {
-                    override fun onResponse(
-                        call: Call<RelacionResponse>,
-                        response: Response<RelacionResponse>
-                    ) {
+                    override fun onResponse(call: Call<RelacionResponse>, response: Response<RelacionResponse>) {
                         if (response.isSuccessful) {
                             Log.d("FilterActivity", "Relación guardada: $request")
                         } else {
@@ -128,11 +124,8 @@ class FilterActivity : BaseActivity() {
 
     private fun verificarSiTodasGuardadas(total: Int, guardadas: Int) {
         if (guardadas == total) {
-            Toast.makeText(this, "Actividades guardadas en el itinerario.", Toast.LENGTH_SHORT)
-                .show()
-            val intent = Intent(this, PrincipalActivity::class.java)
-            startActivity(intent)
-            finish()
+            Toast.makeText(this, "Actividades guardadas en el itinerario.", Toast.LENGTH_SHORT).show()
+            irAPantallaPrincipal()
         }
     }
 
@@ -143,12 +136,7 @@ class FilterActivity : BaseActivity() {
         tipoSpinner.adapter = adapter
 
         tipoSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 cargarLugaresCercanos(tipos[position])
             }
 
@@ -163,14 +151,10 @@ class FilterActivity : BaseActivity() {
         val call = apiService.getNearbyPlaces(typeQuery)
 
         call.enqueue(object : Callback<List<Actividad>> {
-            override fun onResponse(
-                call: Call<List<Actividad>>,
-                response: Response<List<Actividad>>
-            ) {
+            override fun onResponse(call: Call<List<Actividad>>, response: Response<List<Actividad>>) {
                 progressBar.visibility = View.GONE
                 if (response.isSuccessful) {
                     response.body()?.let { actividades ->
-                        Log.d("FilterActivity", "Actividades recibidas: $actividades")
                         actividadesList = actividades
                         actividadAdapter.actualizarActividades(actividadesList)
                     } ?: run {
@@ -183,15 +167,14 @@ class FilterActivity : BaseActivity() {
 
             override fun onFailure(call: Call<List<Actividad>>, t: Throwable) {
                 progressBar.visibility = View.GONE
-                mostrarError("Error de conexión: ${t.message}. ¿Deseas intentar nuevamente?")
+                mostrarError("Error de conexión: ${t.message}")
             }
         })
     }
 
     private fun aplicarFiltros(nombre: String, tipo: String) {
         val listaFiltrada = actividadesList.filter { actividad ->
-            actividad.nombre.contains(nombre, ignoreCase = true) &&
-                    (tipo == "Todos" || actividad.tipo.equals(tipo, ignoreCase = true))
+            actividad.nombre.contains(nombre, ignoreCase = true) && (tipo == "Todos" || actividad.tipo.equals(tipo, ignoreCase = true))
         }
         actividadAdapter.actualizarActividades(listaFiltrada)
     }
@@ -210,7 +193,7 @@ class FilterActivity : BaseActivity() {
     private fun abrirActividadEspecifica(actividad: Actividad) {
         val intent = Intent(this, SpecificActivity::class.java).apply {
             putExtra("name", actividad.nombre)
-            putExtra("itinerarioId", itinerarioId) // Pasar itinerarioId a SpecificActivity
+            putExtra("itinerarioId", itinerarioId)
         }
         startActivityForResult(intent, REQUEST_CODE)
     }
@@ -221,19 +204,17 @@ class FilterActivity : BaseActivity() {
             data?.let {
                 val itinerarioId = it.getIntExtra("itinerarioId", -1)
                 if (itinerarioId != -1) {
-                    Toast.makeText(
-                        this,
-                        "Regreso desde SpecificActivity con Itinerario ID: $itinerarioId",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this, "Regreso desde SpecificActivity con Itinerario ID: $itinerarioId", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(
-                        this,
-                        "No se recibió un Itinerario ID válido",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this, "No se recibió un Itinerario ID válido", Toast.LENGTH_SHORT).show()
                 }
             }
         }
+    }
+
+    private fun irAPantallaPrincipal() {
+        val intent = Intent(this, PrincipalActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
