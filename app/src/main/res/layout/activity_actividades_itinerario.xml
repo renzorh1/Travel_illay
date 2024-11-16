@@ -16,9 +16,32 @@
         android:layout_gravity="center_horizontal"
         android:paddingBottom="16dp" />
 
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="Regresar"
+        android:backgroundTint="?attr/colorPrimary"
+        android:textColor="@android:color/white"
+        android:padding="8dp" />
+
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="Eliminar Itinerario"
+        android:backgroundTint="@android:color/holo_red_dark"
+        android:textColor="@android:color/white"
+        android:padding="8dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewActividades"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical" />
+
+    <!-- Bottom Navigation -->
+    <include layout="@layout/bottom_navigation"/>
 </LinearLayout>

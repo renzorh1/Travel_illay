@@ -1,7 +1,9 @@
 package ui.itinerarios.verItinerarios
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +27,17 @@ class ActividadesItinerarioActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_actividades_itinerario)
+
+        // Configurar los botones
+        val backButton: Button = findViewById(R.id.backButton)
+        backButton.setOnClickListener {
+            finish() // Cierra esta actividad y regresa a la anterior
+        }
+
+        val deleteButton: Button = findViewById(R.id.deleteButton)
+        deleteButton.setOnClickListener {
+            eliminarItinerario()
+        }
 
         // Obtener itinerarioId del Intent
         itinerarioId = intent.getIntExtra("itinerarioId", -1)
@@ -64,6 +77,28 @@ class ActividadesItinerarioActivity : AppCompatActivity() {
             override fun onFailure(call: Call<ActividadesResponse>, t: Throwable) {
                 showToast("Error de conexión: ${t.message}")
                 Log.e("ActividadesItinerario", "Error al obtener actividades", t)
+            }
+        })
+    }
+
+    private fun eliminarItinerario() {
+        val apiService = RetrofitClient.apiService
+        apiService.eliminarItinerario(itinerarioId).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    showToast("Itinerario eliminado con éxito")
+                    val intent = Intent(this@ActividadesItinerarioActivity, ListaItinerariosActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    startActivity(intent)
+                    finish()
+                } else {
+                    showToast("Error al eliminar itinerario: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                showToast("Error de conexión: ${t.message}")
+                Log.e("ActividadesItinerario", "Error al eliminar itinerario", t)
             }
         })
     }

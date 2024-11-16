@@ -1,6 +1,7 @@
 package ui.itinerarios.verItinerarios
 
 import android.os.Bundle
+import android.widget.Button
 import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +17,6 @@ import com.example.travelillay.ui.ItinerarioAdapter
 import models.itineraries.ItinerariosResponse
 import android.content.Intent
 
-
 class ListaItinerariosActivity : BaseActivity() {
 
     private lateinit var recyclerView: RecyclerView
@@ -25,9 +25,15 @@ class ListaItinerariosActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_itinerarios_usuario) // Asegúrate de que el XML esté en el layout
+        setContentView(R.layout.activity_itinerarios_usuario)
 
         setupMenu()
+
+        // Configurar el botón de volver
+        val backButton: Button = findViewById(R.id.backButton)
+        backButton.setOnClickListener {
+            finish() // Regresa a la actividad anterior
+        }
 
         // Configurar RecyclerView
         recyclerView = findViewById(R.id.recyclerViewItinerarios)
@@ -78,6 +84,4 @@ class ListaItinerariosActivity : BaseActivity() {
         intent.putExtra("itinerarioId", itinerario.id) // Pasar el ID del itinerario como extra
         startActivity(intent)
     }
-
-
 }
