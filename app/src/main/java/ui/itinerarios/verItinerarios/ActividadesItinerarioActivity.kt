@@ -2,7 +2,6 @@ package ui.itinerarios.verItinerarios
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +14,7 @@ import models.itineraries.ActividadesResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import ui.itinerarios.manual.FilterActivity
 import ui.itinerarios.verItinerarios.adapter.ActividadAdapter
 
 class ActividadesItinerarioActivity : AppCompatActivity() {
@@ -28,15 +28,20 @@ class ActividadesItinerarioActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_actividades_itinerario)
 
-        // Configurar los botones
+        // Configurar botones
         val backButton: Button = findViewById(R.id.backButton)
         backButton.setOnClickListener {
-            finish() // Cierra esta actividad y regresa a la anterior
+            finish()
         }
 
         val deleteButton: Button = findViewById(R.id.deleteButton)
         deleteButton.setOnClickListener {
             eliminarItinerario()
+        }
+
+        val agregarButton: Button = findViewById(R.id.agregarActividadesButton)
+        agregarButton.setOnClickListener {
+            abrirFilterActivity()
         }
 
         // Obtener itinerarioId del Intent
@@ -55,7 +60,6 @@ class ActividadesItinerarioActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerViewActividades)
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = ActividadAdapter(actividadesList, this) { actividad ->
-            Log.d("ActividadSeleccionada", "ID de actividad seleccionada: ${actividad.id}")
             showToast("ID de actividad seleccionada: ${actividad.id}")
         }
         recyclerView.adapter = adapter
@@ -70,15 +74,14 @@ class ActividadesItinerarioActivity : AppCompatActivity() {
                         actividadesList.clear()
                         actividadesResponse.actividades.forEach { actividadWrapper ->
                             val actividad = ActividadDetalle(
-                                id = actividadWrapper.id.toInt(), // ID de la relación
-                                actividadId = actividadWrapper.actividad_id.toLong(), // ID único de la actividad
+                                id = actividadWrapper.id.toInt(),
+                                actividadId = actividadWrapper.actividad_id.toLong(),
                                 nombre = actividadWrapper.actividad.nombre,
                                 calificacion = actividadWrapper.actividad.calificacion,
                                 hora_inicio_preferida = actividadWrapper.actividad.hora_inicio_preferida,
                                 hora_fin_preferida = actividadWrapper.actividad.hora_fin_preferida
                             )
                             actividadesList.add(actividad)
-                            Log.d("ActividadID", "Actividad ID: ${actividad.actividadId}, Nombre: ${actividad.nombre}")
                         }
                         adapter.notifyDataSetChanged()
                         showToast("Actividades cargadas correctamente")
@@ -90,7 +93,6 @@ class ActividadesItinerarioActivity : AppCompatActivity() {
 
             override fun onFailure(call: Call<ActividadesResponse>, t: Throwable) {
                 showToast("Error de conexión: ${t.message}")
-                Log.e("ActividadesItinerario", "Error al obtener actividades", t)
             }
         })
     }
@@ -101,9 +103,6 @@ class ActividadesItinerarioActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     showToast("Itinerario eliminado con éxito")
-                    val intent = Intent(this@ActividadesItinerarioActivity, ListaItinerariosActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    startActivity(intent)
                     finish()
                 } else {
                     showToast("Error al eliminar itinerario: ${response.message()}")
@@ -112,9 +111,14 @@ class ActividadesItinerarioActivity : AppCompatActivity() {
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 showToast("Error de conexión: ${t.message}")
-                Log.e("ActividadesItinerario", "Error al eliminar itinerario", t)
             }
         })
+    }
+
+    private fun abrirFilterActivity() {
+        val intent = Intent(this, FilterActivity::class.java)
+        intent.putExtra("itinerarioId", itinerarioId) // Pasar el ID del itinerario
+        startActivity(intent)
     }
 
     private fun showToast(message: String) {
