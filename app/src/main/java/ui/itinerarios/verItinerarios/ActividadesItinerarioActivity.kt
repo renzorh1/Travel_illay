@@ -54,7 +54,10 @@ class ActividadesItinerarioActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         recyclerView = findViewById(R.id.recyclerViewActividades)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = ActividadAdapter(actividadesList)
+        adapter = ActividadAdapter(actividadesList, this) { actividad ->
+            Log.d("ActividadSeleccionada", "ID de actividad seleccionada: ${actividad.id}")
+            showToast("ID de actividad seleccionada: ${actividad.id}")
+        }
         recyclerView.adapter = adapter
     }
 
@@ -65,7 +68,18 @@ class ActividadesItinerarioActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     response.body()?.let { actividadesResponse ->
                         actividadesList.clear()
-                        actividadesList.addAll(actividadesResponse.actividades.map { it.actividad })
+                        actividadesResponse.actividades.forEach { actividadWrapper ->
+                            val actividad = ActividadDetalle(
+                                id = actividadWrapper.id.toInt(), // ID de la relación
+                                actividadId = actividadWrapper.actividad_id.toLong(), // ID único de la actividad
+                                nombre = actividadWrapper.actividad.nombre,
+                                calificacion = actividadWrapper.actividad.calificacion,
+                                hora_inicio_preferida = actividadWrapper.actividad.hora_inicio_preferida,
+                                hora_fin_preferida = actividadWrapper.actividad.hora_fin_preferida
+                            )
+                            actividadesList.add(actividad)
+                            Log.d("ActividadID", "Actividad ID: ${actividad.actividadId}, Nombre: ${actividad.nombre}")
+                        }
                         adapter.notifyDataSetChanged()
                         showToast("Actividades cargadas correctamente")
                     } ?: showToast("No se encontraron actividades")

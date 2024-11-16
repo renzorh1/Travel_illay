@@ -66,5 +66,10 @@ interface ApiService {
     @DELETE("api/itinerarios/{itinerarioId}")
     fun eliminarItinerario(@Path("itinerarioId") itinerarioId: Int): Call<Void>
 
+    @DELETE("api/actividad/eliminar/{actividadId}")
+    fun eliminarActividad(@Path("actividadId") actividadId: Int): Call<Void>
+
+    @GET("api/actividad/actividades-con-id/{itinerarioId}")
+    fun obtenerActividadesConId(@Path("itinerarioId") itinerarioId: Int): Call<List<Actividad>>
 }
 
