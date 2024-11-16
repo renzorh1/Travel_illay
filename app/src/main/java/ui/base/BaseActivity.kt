@@ -18,6 +18,7 @@ import com.example.travelillay.R
 import ui.main.MainActivity
 import ui.principal.PrincipalActivity
 import ui.profile.PerfilActivity
+import ui.itinerarios.verItinerarios.ListaItinerariosActivity
 import ui.configuration.ConfigurationActivity
 import ui.itinerarios.OpcionesItinerario
 import android.util.Log
@@ -164,6 +165,8 @@ open class BaseActivity : AppCompatActivity() {
         val menuButton: ImageButton? = findViewById(R.id.menuButton)
         val inicioButton: LinearLayout? = findViewById(R.id.inicioButton)
         val crearButton: LinearLayout? = findViewById(R.id.crearButton)
+        val itinerariosButton: LinearLayout? = findViewById(R.id.itinerariosButton)  // Nuevo botón de itinerarios
+
 
         menuButton?.setOnClickListener { v ->
             showPopupMenu(v,
@@ -179,6 +182,11 @@ open class BaseActivity : AppCompatActivity() {
 
         crearButton?.setOnClickListener {
             navigateTo(OpcionesItinerario::class.java)
+        }
+
+        itinerariosButton?.setOnClickListener {
+            // Navegación hacia la actividad de lista de itinerarios
+            navigateTo(ListaItinerariosActivity::class.java)
         }
     }
 

@@ -7,6 +7,7 @@ import models.itineraries.Itinerario
 import models.preferences.Preferencias
 import models.preferences.PreferenciasRequest
 import models.itineraries.ProximoItinerarioIdResponse
+import models.itineraries.ItinerariosResponse
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -54,6 +55,9 @@ interface ApiService {
 
     @GET("api/itinerarios/ultimo-id/{usuario_id}")
     fun obtenerProximoItinerarioId(@Path("usuario_id") usuarioId: Int): Call<ProximoItinerarioIdResponse>
+
+    @GET("api/itinerarios/usuario/{usuario_id}/itinerarios")
+    fun obtenerItinerariosPorUsuario(@Path("usuario_id") usuarioId: Int): Call<ItinerariosResponse>
 
 }
 
