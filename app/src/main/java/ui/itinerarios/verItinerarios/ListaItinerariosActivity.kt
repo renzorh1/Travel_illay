@@ -14,6 +14,8 @@ import retrofit2.Response
 import ui.base.BaseActivity
 import com.example.travelillay.ui.ItinerarioAdapter
 import models.itineraries.ItinerariosResponse
+import android.content.Intent
+
 
 class ListaItinerariosActivity : BaseActivity() {
 
@@ -68,7 +70,14 @@ class ListaItinerariosActivity : BaseActivity() {
     }
 
     private fun onItinerarioClick(itinerario: Itinerario) {
+        // Mostrar un mensaje para confirmar la selección
         Toast.makeText(this, "Itinerario seleccionado: ${itinerario.nombre}", Toast.LENGTH_SHORT).show()
-        // Puedes implementar la navegación o acciones adicionales aquí
+
+        // Navegar a ActividadesItinerarioActivity
+        val intent = Intent(this, ActividadesItinerarioActivity::class.java)
+        intent.putExtra("itinerarioId", itinerario.id) // Pasar el ID del itinerario como extra
+        startActivity(intent)
     }
+
+
 }

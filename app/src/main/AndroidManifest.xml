@@ -67,6 +67,10 @@
             android:name="ui.itinerarios.verItinerarios.ListaItinerariosActivity"
             android:exported="false" />
 
+        <activity
+            android:name="ui.itinerarios.verItinerarios.ActividadesItinerarioActivity"
+            android:exported="false" />
+
 
         <activity android:name="ui.itinerarios.manual.SpecificActivity" />
 
