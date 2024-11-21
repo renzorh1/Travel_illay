@@ -9,8 +9,10 @@ import models.preferences.PreferenciasRequest
 import models.itineraries.ProximoItinerarioIdResponse
 import models.itineraries.ItinerariosResponse
 import models.itineraries.ActividadesResponse
+import models.itineraries.NuevoNombreRequest
 import retrofit2.Call
 import retrofit2.http.*
+
 
 interface ApiService {
 
@@ -71,5 +73,9 @@ interface ApiService {
 
     @GET("api/actividad/actividades-con-id/{itinerarioId}")
     fun obtenerActividadesConId(@Path("itinerarioId") itinerarioId: Int): Call<List<Actividad>>
+
+    @PUT("api/itinerarios/itinerario/{itinerario_id}/cambiar-nombre")
+    fun cambiarNombreItinerario(@Path("itinerario_id") itinerarioId: Int, @Body nuevoNombreRequest: NuevoNombreRequest): Call<Void>
+
 }
 
