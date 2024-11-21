@@ -6,6 +6,9 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+
+    <include layout="@layout/header_layout" />
+
     <TextView
         android:id="@+id/tituloActividades"
         android:layout_width="wrap_content"
@@ -48,10 +51,10 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewActividades"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="378dp"
+        android:layout_height="442dp"
         android:scrollbars="vertical" />
 
-    <!-- Bottom Navigation -->
-    <include layout="@layout/bottom_navigation"/>
+    <include layout="@layout/bottom_navigation" />
+
 </LinearLayout>

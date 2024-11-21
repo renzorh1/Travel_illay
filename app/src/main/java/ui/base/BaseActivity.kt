@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import com.example.travelillay.R
 import ui.main.MainActivity
 import ui.principal.PrincipalActivity
+import ui.mapa.MapActivity
 import ui.profile.PerfilActivity
 import ui.itinerarios.verItinerarios.ListaItinerariosActivity
 import ui.configuration.ConfigurationActivity
@@ -165,8 +166,8 @@ open class BaseActivity : AppCompatActivity() {
         val menuButton: ImageButton? = findViewById(R.id.menuButton)
         val inicioButton: LinearLayout? = findViewById(R.id.inicioButton)
         val crearButton: LinearLayout? = findViewById(R.id.crearButton)
-        val itinerariosButton: LinearLayout? = findViewById(R.id.itinerariosButton)  // Nuevo botón de itinerarios
-
+        val itinerariosButton: LinearLayout? = findViewById(R.id.itinerariosButton)
+        val mapaButton: LinearLayout? = findViewById(R.id.mapaButton) // Nuevo botón de mapa
 
         menuButton?.setOnClickListener { v ->
             showPopupMenu(v,
@@ -185,8 +186,11 @@ open class BaseActivity : AppCompatActivity() {
         }
 
         itinerariosButton?.setOnClickListener {
-            // Navegación hacia la actividad de lista de itinerarios
             navigateTo(ListaItinerariosActivity::class.java)
+        }
+
+        mapaButton?.setOnClickListener {
+            navigateTo(MapActivity::class.java) // Navegación al mapa
         }
     }
 

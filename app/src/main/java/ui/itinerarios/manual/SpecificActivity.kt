@@ -134,8 +134,9 @@ class SpecificActivity : BaseActivity() {
                         Toast.makeText(this@SpecificActivity, "Error al obtener datos de la actividad guardada", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Log.e("SpecificActivity", "Error al guardar actividad: ${response.code()} - ${response.errorBody()?.string()}")
-                    Toast.makeText(this@SpecificActivity, "Error al guardar actividad: ${response.message()}", Toast.LENGTH_SHORT).show()
+                    val errorBody = response.errorBody()?.string() ?: "Desconocido"
+                    Log.e("SpecificActivity", "Error al guardar actividad: ${response.code()} - $errorBody")
+                    Toast.makeText(this@SpecificActivity, "Error al guardar actividad: $errorBody", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -144,7 +145,6 @@ class SpecificActivity : BaseActivity() {
             }
         })
     }
-
     private fun guardarRelacionItinerarioActividad(actividadId: Int) {
         if (itinerarioId > 0) {
             val request = RelacionRequest(itinerarioId, actividadId) // Cambiado a Int

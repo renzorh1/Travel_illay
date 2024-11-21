@@ -53,11 +53,13 @@ class PreferencesActivity : BaseActivity() {
                 val horaFin = String.format("%02d:%02d", finTimePicker.hour, finTimePicker.minute)
 
                 // Obtener las actividades seleccionadas
+
+
                 val actividadesSeleccionadas = mutableListOf<String>()
-                if (restaurantesCheckBox.isChecked) actividadesSeleccionadas.add("Restaurantes")
-                if (parquesCheckBox.isChecked) actividadesSeleccionadas.add("Parques")
-                if (museosCheckBox.isChecked) actividadesSeleccionadas.add("Museos")
-                if (libreriaCheckBox.isChecked) actividadesSeleccionadas.add("Librería")
+                if (restaurantesCheckBox.isChecked) actividadesSeleccionadas.add("restaurant")
+                if (parquesCheckBox.isChecked) actividadesSeleccionadas.add("park")
+                if (museosCheckBox.isChecked) actividadesSeleccionadas.add("museum")
+                if (libreriaCheckBox.isChecked) actividadesSeleccionadas.add("library")
 
                 // Guardar preferencias en la API
                 savePreferences(horaInicio, horaFin, actividadesSeleccionadas)

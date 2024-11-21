@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Permisos para acceder a Internet y ubicación -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
@@ -21,6 +19,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         tools:targetApi="31">
 
+        <!-- Actividad inicial o pantalla de carga -->
         <activity
             android:name="ui.register.SplashActivity"
             android:exported="true">
@@ -30,6 +29,7 @@
             </intent-filter>
         </activity>
 
+        <!-- Actividades principales -->
         <activity
             android:name="ui.main.MainActivity"
             android:exported="true" />
@@ -71,10 +71,22 @@
             android:name="ui.itinerarios.verItinerarios.ActividadesItinerarioActivity"
             android:exported="false" />
 
-        <activity android:name="ui.itinerarios.verItinerarios.DetalleActividadActivity" />
-
-
         <activity android:name="ui.itinerarios.manual.SpecificActivity" />
+
+        <!-- Clave API de Google Maps -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDr1xH61ZEU3KeMKtAiK_BxbsH7tPNtR-U" />
+
+        <!-- Actividad del mapa -->
+        <activity
+            android:name="ui.mapa.MapActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
     </application>
 

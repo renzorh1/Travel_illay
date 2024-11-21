@@ -19,15 +19,19 @@ import retrofit2.Response
 
 
 class ActividadAdapter(
+
     private val actividades: MutableList<ActividadDetalle>, // Lista de actividades
     private val context: Context, // Context para manejar el intent
     private val onDeleteClick: (ActividadDetalle) -> Unit // Callback para manejar actualizaciones tras eliminación
-) : RecyclerView.Adapter<ActividadAdapter.ActividadViewHolder>() {
+) : RecyclerView.Adapter<ActividadAdapter.ActividadViewHolder>()
+
+{
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActividadViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_actividad_simple, parent, false)
         return ActividadViewHolder(view)
     }
+
 
     override fun onBindViewHolder(holder: ActividadViewHolder, position: Int) {
         val actividad = actividades[position]
