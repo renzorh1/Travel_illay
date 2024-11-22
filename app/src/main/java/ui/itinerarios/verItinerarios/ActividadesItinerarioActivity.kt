@@ -3,6 +3,7 @@ package ui.itinerarios.verItinerarios
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,6 +12,9 @@ import com.example.travelillay.R
 import com.example.travelillay.data.network.RetrofitClient
 import models.itineraries.ActividadDetalle
 import models.itineraries.ActividadesResponse
+import models.itineraries.Itinerario
+import models.itineraries.NuevoNombreRequest
+import models.itineraries.ItinerariosResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,12 +27,18 @@ class ActividadesItinerarioActivity : AppCompatActivity() {
     private lateinit var adapter: ActividadAdapter
     private val actividadesList = mutableListOf<ActividadDetalle>()
     private var itinerarioId: Int = -1
+    private lateinit var nombreEditText: EditText
+    private lateinit var cambiarNombreButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_actividades_itinerario)
 
-        // Configurar botones
+        // Inicializar vistas
+        nombreEditText = findViewById(R.id.nombreItinerarioEditText)
+        cambiarNombreButton = findViewById(R.id.cambiarNombreButton)
+
         val backButton: Button = findViewById(R.id.backButton)
         backButton.setOnClickListener {
             finish()
@@ -52,7 +62,17 @@ class ActividadesItinerarioActivity : AppCompatActivity() {
             return
         }
 
+        cambiarNombreButton.setOnClickListener {
+            val nuevoNombre = nombreEditText.text.toString()
+            if (nuevoNombre.isNotBlank()) {
+                cambiarNombreItinerario(nuevoNombre)
+            } else {
+                showToast("El nombre no puede estar vacío")
+            }
+        }
+
         setupRecyclerView()
+
         obtenerActividadesDeItinerario(itinerarioId)
     }
 
@@ -64,6 +84,27 @@ class ActividadesItinerarioActivity : AppCompatActivity() {
         }
         recyclerView.adapter = adapter
     }
+
+    private fun cambiarNombreItinerario(nuevoNombre: String) {
+        val apiService = RetrofitClient.apiService
+        val request = NuevoNombreRequest(nuevo_nombre = nuevoNombre)
+        apiService.cambiarNombreItinerario(itinerarioId, request).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    // Actualizar el EditText con el nuevo nombre
+                    nombreEditText.setText(nuevoNombre)
+                    showToast("Nombre del itinerario actualizado")
+                } else {
+                    showToast("Error al actualizar el nombre: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                showToast("Error de conexión: ${t.message}")
+            }
+        })
+    }
+
 
     private fun obtenerActividadesDeItinerario(itinerarioId: Int) {
         val apiService = RetrofitClient.apiService
