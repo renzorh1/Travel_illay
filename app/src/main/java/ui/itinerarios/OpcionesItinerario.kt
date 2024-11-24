@@ -24,5 +24,4 @@ class OpcionesItinerario : BaseActivity() {
         }
     }
 
-    // No activamos la eliminación de itinerario aquí
 }
